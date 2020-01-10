@@ -4,7 +4,7 @@ This document defines FABRIC authorization policies to help with implementing pr
 
 FABRIC will rely on a federated identity model and ABAC (Attribute-Based Access Control). Each identity comes with a mix of attributes, some asserted by the institutional IdP (Identity Provider) and some via a FABRIC-specific mechanism (e.g. CoManage). These attributes can be provided to the authorization system in a secure way in order to allow it to make access decisions to various protected APIs. Policies will be specified in XACML and each RESTful API endpoint will be protected by an XACML-capable PDP (Policy Decision Point)
 
-FABRIC deployment consists of multiple sites presenting different services focused on provisioning of resources and measurements. Different sites (aggregates) may use different policies with respect to user permissions (provider autonomy). In addition to resources in multiple sites and measurements, permissions must also be managed on various actions within the FABRIC portal. The goal of this document is to define a set of initial policies so they can be implemented in XACML and other mechanisms and properly evaluated.
+For the purposes of this document a FABRIC deployment consists of multiple sites presenting different RESTful services focused on provisioning of resources and measurements. Different sites (aggregates) may use different policies with respect to user permissions (provider autonomy). In addition to resources in multiple sites and measurements, permissions must also be managed on various actions within the FABRIC portal. The goal of this document is to define a set of initial policies so they can be implemented in XACML and other mechanisms and properly evaluated.
 
 The document follows the approach defined [here](https://stackoverflow.com/questions/41473752/complex-authorization-using-xacml) in defining the specification.
 
@@ -186,6 +186,13 @@ policyset slice {
 policyset sliver {
 }
 ```
+
+## Policy implementations
+
+Policies and associated example requests are defined in the following subdirectories:
+- Project level policies and example requests in [project/](project)
+- Slice level policies and example requests in [slice/](slice)
+- Sliver level policies and example requests in [sliver/](sliver)
 
 ## Testing with authzforce server
 
