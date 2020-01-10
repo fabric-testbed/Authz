@@ -244,4 +244,96 @@
         </Condition>
       </Rule>
     </Policy>
+    <!-- manage members -->
+    <Policy PolicyId="urn:fabric:authz:xacml:ProjectExamle1:ManageProjectMembers"
+    RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit"
+    Version="1.0">
+    <Description>
+      Project member management.
+    </Description>
+    <Target>
+      <AnyOf>
+        <AllOf>
+          <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+            <AttributeValue
+                DataType="http://www.w3.org/2001/XMLSchema#string">addMember</AttributeValue>
+            <AttributeDesignator
+                AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+                DataType="http://www.w3.org/2001/XMLSchema#string"
+                Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action"
+                MustBePresent="false"/>
+          </Match>
+        </AllOf>
+        <AllOf>
+          <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+            <AttributeValue
+                DataType="http://www.w3.org/2001/XMLSchema#string">removeMember</AttributeValue>
+            <AttributeDesignator
+                AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+                DataType="http://www.w3.org/2001/XMLSchema#string"
+                Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action"
+                MustBePresent="false"/>
+          </Match>
+        </AllOf>
+      </AnyOf>
+    </Target>
+    <Rule Effect="Permit"
+      RuleId="urn:fabric:authz:xacml:ProjectExample1:ManageProjectMemberByOwnerOrLeadRule">
+      <Description>
+        Project Owner or Project Lead can add and remove owners of her project (implemented via concat).
+      </Description>
+      <Target/>
+      <Condition>
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of-any">
+              <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
+              <AttributeDesignator
+                AttributeId="urn:fabric:xacml:attributes:fabric-role"
+                DataType="http://www.w3.org/2001/XMLSchema#string"
+                Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                MustBePresent="true"
+              />
+              <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">projectLead</AttributeValue>
+              </Apply>
+            </Apply>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of-any">
+              <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
+              <AttributeDesignator
+                AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+                DataType="http://www.w3.org/2001/XMLSchema#string"
+                Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                MustBePresent="true"
+              />
+              <AttributeDesignator
+                AttributeId="urn:fabric:xacml:attributes:resource-creator"
+                DataType="http://www.w3.org/2001/XMLSchema#string"
+                Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+                MustBePresent="true"
+              />
+            </Apply>
+          </Apply>
+          <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of-any">
+            <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
+            <AttributeDesignator
+              AttributeId="urn:fabric:xacml:attributes:fabric-role"
+              DataType="http://www.w3.org/2001/XMLSchema#string"
+              Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+              MustBePresent="true"
+            />
+            <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:map">
+              <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:string-concatenate"/>
+              <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">projectOwner:</AttributeValue>
+              <AttributeDesignator
+                AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+                DataType="http://www.w3.org/2001/XMLSchema#string"
+                Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+                MustBePresent="false"/>
+            </Apply>
+          </Apply>
+        </Apply>
+      </Condition>
+    </Rule>
+    </Policy>
   </PolicySet>

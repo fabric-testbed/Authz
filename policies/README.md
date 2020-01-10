@@ -8,8 +8,6 @@ FABRIC deployment consists of multiple sites presenting different services focus
 
 The document follows the approach defined here in defining the specification.
 
-For information about the terms refer to [1].
-
 ## INFORMAL SPECIFICATION
 
 Privileges in FABRIC are granted based on grouping. Each group, referred to as a project has a specific set of rights limiting their use of resources on a specific subset of aggregates. Resource provisioning is limited at two levels - that of a control framework broker (could be multiple brokers; brokers are optional in small deployments) and at the level of individual aggregate managers issuing resources. Brokers enforce federation-level policies, while aggregate managers, under the control of their respective owners, enforce individual aggregate-level policies. Federation- or aggregate-level policies use project membership information, alongside other available identity attributes to make their authorization decisions. Policies can additionally use constraints like time-of-day and requested, available and used resource type and unit levels as part of the access decision process.
@@ -36,21 +34,21 @@ Available resource thresholds (i.e. ‘if fewer than 5 apples are left available
 
 ## SEMI-FORMAL SPECIFICATION
 
-Project Lead can create projects
-Project Lead can delete the project they created
-Project Lead can add and remove Project Owners from projects they created
-Project Lead is also a Project Owner
-Project Owner can add and remove Project Members from their project
-Project Owner is also a Project Member
-Project Member can create slices within a project
-Project Member can create slivers within any project slice subject to federation- or aggregate-level resource limits
-Project Member can modify or delete any sliver created by them in any project slice. Modify operations are subject to federation- and aggregate-level resource limits.
-Project Owner can modify or delete any sliver belonging to a slice created within their project. Modify operations are subject to federation- and aggregate-level resource limits.
-Project Member can delete a slice they created, as long as no slivers created by other members exist in the slice
-Facility Operator can remove any project
-Facility Operator can add and remove Project Owners from any project
-Facility Operator is also a Project Owner for any project (can add remove members)
-Facility Operator is also a Project Member for any project (can create/delete slices and slivers)
+1. Project Lead can create projects
+1. Project Lead can delete the project they created
+1. Project Lead can add and remove Project Owners from projects they created
+1. Project Lead is also a Project Owner
+1. Project Owner can add and remove Project Members from their project
+1. Project Owner is also a Project Member
+1. Project Member can create slices within a project
+1. Project Member can create slivers within any project slice subject to federation- or aggregate-level resource limits
+1. Project Member can modify or delete any sliver created by them in any project slice. Modify operations are subject to federation- and aggregate-level resource limits.
+1. Project Owner can modify or delete any sliver belonging to a slice created within their project. Modify operations are subject to federation- and aggregate-level resource limits.
+1. Project Member can delete a slice they created, as long as no slivers created by other members exist in the slice
+1. Facility Operator can remove any project
+1. Facility Operator can add and remove Project Owners from any project
+1. Facility Operator is also a Project Owner for any project (can add remove members)
+1. Facility Operator is also a Project Member for any project (can create/delete slices and slivers)
 
 ## ATTRIBUTES
 
@@ -71,61 +69,27 @@ Using CI Logon many of the EduCause attributes should be available, see here.
 
 ### Resource Attributes
 
-Attribute
-Values or Type
-Notes
-auth_resource_type
-project, slice, sliver
-Top level resource type for authorization
-sliver_category
-
-
-Applies only to slivers
-sliver_size
-Integer
-Applies only to slivers
-sliver_count
-Integer
-Applies only to slivers
+| Attribute | Values or Type | Notes |
+| --- | --- | --- |
+| auth_resource_type | project, slice, sliver | Top level resource type for authorization |
+| sliver_category |     | Applies only to slivers |
+| sliver_size     | Integer | Applies only to slivers |
+| sliver_count    | Integer | Applies only to slivers |
 
 
 ### Actions and Action Attributes
 
-Action
-Additional action attributes
-Notes
-createProject
-
-
-
-
-deleteProject
-
-
-
-
-addOwner
-
-
-
-
-removeOwner
-
-
-
-
-addMember
-
-
-
-
-removeMember
-
-
-
-
+| Action | Additional action attributes | Notes |
+| --- | --- | --- |
+| createProject |   |   |
+| deleteProject |   |   |
+| addOwner      |   |   |
+| removeOwner   |   |   |
+| addMember     |   |   |
+| removeMember  |   |   |
 
 ## Formal Specification
+
 Uses ALFA-like syntax (but we are not using ALFA, as it appears defunct at this point - actual policies will be written in XACML3.0)
 
 ```
@@ -162,7 +126,8 @@ policyset project {
         apply denyUnlessPermit
         rule addOwner {
             permit
-            condition project.creator == user.eppn and user.fabric_role == “projectLead”
+            condition project.creator == user.eppn and
+            user.fabric_role == “projectLead”
         }
         rule addOwnerAsOperator {
             permit
@@ -176,14 +141,31 @@ policyset project {
         apply denyUnlessPermit
         rule addMemberAsOwner {
             permit
-            condition user.eppn == project.owner and (concat(“projectOwner:”, project.name) == user.fabric_role or user.fabric_role == “projectLead”))
+            /* perhaps there is a better way to deal with predicates of arity 2;
+            the implied predicate here is projectOwner(principal, project) */
+            condition concat(“projectOwner:”, project.name) == user.fabric_role or (user.fabric_role == “projectLead” and user.eppn == project.creator)
         }
         rule addMemberAsOperator {
             permit
             condition user.fabric_role == “facilityOperator”
         }
     }
-}
+
+    /* alternatively (if we don't want to mess with concat
+    and arity 2 predicates); requires adding resource.owner property */
+    policy manageProjectMember {
+        target clause actionId anyOf “addMember”, “removeMember”
+        apply denyUnlessPermit
+        rule addMemberAsOwner {
+            permit
+            condition (user.fabric_role == projectOwner and project.owner == user.eppn) or (user.fabric_role == “projectLead” and user.eppn == project.creator)
+        }
+        rule addMemberAsOperator {
+            permit
+            condition user.fabric_role == “facilityOperator”
+        }
+    }
+  }
 
 /* slice policy set */
 policyset slice {
@@ -200,3 +182,13 @@ policyset slice {
 policyset sliver {
 }
 ```
+
+## Useful references
+
+- [StackOverflow example](https://stackoverflow.com/questions/41473752/complex-authorization-using-xacml)
+- [XACML3 spec](https://docs.oasis-open.org/xacml/3.0/xacml-3.0-core-spec-os-en.html#_Toc325047132)
+- [FIWARE Tutorial](https://github.com/FIWARE/tutorials.XACML-Access-Rules)
+- [Another FIWARE Tutorial](https://fiware-tutorials.readthedocs.io/en/latest/cmds/administrating-xacml/index.html#13-request)
+- [WSO Tutorial](https://docs.wso2.com/display/IS560/Fine-grained+Authorization+using+XACML+Requests+in+JSON+Format)
+- [Authzforce implementation](https://github.com/authzforce/core)
+- [Balana implementation](https://github.com/wso2/balana)
