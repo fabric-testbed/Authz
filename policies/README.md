@@ -60,10 +60,10 @@ Using CI Logon many of the EduCause attributes should be available, see here.
 | --- | --- | --- | --- |
 | idp-name | String | Institutional IdP | Can be used as stand-in for home institution. |
 | full-name | String | Institutional IdP | Also given_name and family_name are available in many cases |
-| affiliation | String employee@unc.edu; staff@unc.edu; member@unc.edu | Institutional IdP | Can be used for basic group membership decisions on resource limits  (faculty > staff > student)  Institution can be inferred from @xyz.edu in addition to using idp_name above. |
+| affiliation | String employee@university.edu; staff@university.edu; member@university.edu | Institutional IdP | Can be used for basic group membership decisions on resource limits  (faculty > staff > student). Part of R&S attribute set.  Institution can be inferred from @xyz.edu in addition to using idp_name above. |
 | subject-id | String, typically institutional email | Institutional IdP | eduPersonPrincipalName or eppn|
 | email | String | Institutional IdP | |
-| cert_subject_dn | String /DC=org/DC=cilogon/C=US/O=University of North Carolina at Chapel Hill/CN=Ilya Baldin T2758558 | CI Logon | Can be useful if we also use CI Logon-issued certs. |
+| cert_subject_dn | String /DC=org/DC=cilogon/C=US/O=University of Blah/CN=FirstName LastName T1234567 | CI Logon | Can be useful if we also use CI Logon-issued certs. |
 | fabric-role | Project Lead, Project Owner, Project Member | FABRIC/CI Logon |   |
 | fabric-project | String | FABRIC/CI Logon |   |
 
@@ -198,7 +198,7 @@ Policies and associated example requests are defined in the following subdirecto
 
 1. Download the latest [authzforce-ce-core-pdp-cli-X.Y.Z](https://github.com/authzforce/core) and follow instructions
 1. Download the latest [configuration and example policy folder](https://github.com/authzforce/core/tree/develop/pdp-cli/src/test/resources/conformance/xacml-3.0-core/mandatory)
-1. Modify pdp.xml to (a) point to the policy XML file you are testing and make sure rootPolicyRef element URN matches that at the top of your policy
+1. Modify pdp.xml to (a) point to the policy XML file you are testing and (b) make sure rootPolicyRef element URN matches that at the top of your policy
 1. Execute as follows and observe the result:
 ```
 $ ./authzforce-ce-core-pdp-cli-14.0.1.jar pdp.xml <request path>/requestfile.xml
