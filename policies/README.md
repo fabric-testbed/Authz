@@ -183,6 +183,16 @@ policyset sliver {
 }
 ```
 
+## Testing with authzforce server
+
+1. Download the latest [authzforce-ce-core-pdp-cli-X.Y.Z](https://github.com/authzforce/core) and follow instructions
+1. Download the latest [configuration and example policy folder](https://github.com/authzforce/core/tree/develop/pdp-cli/src/test/resources/conformance/xacml-3.0-core/mandatory)
+1. Modify pdp.xml to (a) point to the policy XML file you are testing and make sure rootPolicyRef element URN matches that at the top of your policy
+1. Execute as follows and observe the result:
+```
+$ ./authzforce-ce-core-pdp-cli-14.0.1.jar pdp.xml <request path>/requestfile.xml
+```
+
 ## Useful references
 
 - [StackOverflow example](https://stackoverflow.com/questions/41473752/complex-authorization-using-xacml)
