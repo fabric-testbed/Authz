@@ -1,14 +1,14 @@
-## OVERVIEW
+## Overview
 
-This document defines FABRIC authorization policies in semi-formal fashion to help with implementing and evaluating different approaches.
+This document defines FABRIC authorization policies to help with implementing production policies using XACML3.0.
 
-FABRIC will rely on a federated identity model and ABAC (Attribute-Based Access Control). Each identity comes with a mix of attributes, some asserted by the institutional IdP (Identity Provider) and some via a FABRIC-specific mechanism (e.g. CoManage). These attributes can be provided to the authorization system in a secure way in order to allow it to make access decisions to various protected APIs.
+FABRIC will rely on a federated identity model and ABAC (Attribute-Based Access Control). Each identity comes with a mix of attributes, some asserted by the institutional IdP (Identity Provider) and some via a FABRIC-specific mechanism (e.g. CoManage). These attributes can be provided to the authorization system in a secure way in order to allow it to make access decisions to various protected APIs. Policies will be specified in XACML and each RESTful API endpoint will be protected by an XACML-capable PDP (Policy Decision Point)
 
 FABRIC deployment consists of multiple sites presenting different services focused on provisioning of resources and measurements. Different sites (aggregates) may use different policies with respect to user permissions (provider autonomy). In addition to resources in multiple sites and measurements, permissions must also be managed on various actions within the FABRIC portal. The goal of this document is to define a set of initial policies so they can be implemented in XACML and other mechanisms and properly evaluated.
 
-The document follows the approach defined here in defining the specification.
+The document follows the approach defined [here](https://stackoverflow.com/questions/41473752/complex-authorization-using-xacml) in defining the specification.
 
-## INFORMAL SPECIFICATION
+## Informal Specification
 
 Privileges in FABRIC are granted based on grouping. Each group, referred to as a project has a specific set of rights limiting their use of resources on a specific subset of aggregates. Resource provisioning is limited at two levels - that of a control framework broker (could be multiple brokers; brokers are optional in small deployments) and at the level of individual aggregate managers issuing resources. Brokers enforce federation-level policies, while aggregate managers, under the control of their respective owners, enforce individual aggregate-level policies. Federation- or aggregate-level policies use project membership information, alongside other available identity attributes to make their authorization decisions. Policies can additionally use constraints like time-of-day and requested, available and used resource type and unit levels as part of the access decision process.
 
@@ -32,7 +32,7 @@ Additional constraints for resource provisioning policies can come from
 Calendar time or date (i.e. for a specific aggregate ‘during exam week only make resources available only to users from home institution’)
 Available resource thresholds (i.e. ‘if fewer than 5 apples are left available, only home institution users can have them’)
 
-## SEMI-FORMAL SPECIFICATION
+## Semi-Formal Specification
 
 1. Project Lead can create projects
 1. Project Lead can delete the project they created
@@ -50,7 +50,7 @@ Available resource thresholds (i.e. ‘if fewer than 5 apples are left available
 1. Facility Operator is also a Project Owner for any project (can add remove members)
 1. Facility Operator is also a Project Member for any project (can create/delete slices and slivers)
 
-## ATTRIBUTES
+## Attributes
 
 ### Available Subject Attributes/Claims
 
@@ -58,35 +58,39 @@ Using CI Logon many of the EduCause attributes should be available, see here.
 
 | Attribute | Values or Type | Claimed by | Notes |
 | --- | --- | --- | --- |
-| idp_name | String | Institutional IdP | Can be used as stand-in for home institution. |
-| name | String | Institutional IdP | Also given_name and family_name are available in many cases |
+| idp-name | String | Institutional IdP | Can be used as stand-in for home institution. |
+| full-name | String | Institutional IdP | Also given_name and family_name are available in many cases |
 | affiliation | String employee@unc.edu; staff@unc.edu; member@unc.edu | Institutional IdP | Can be used for basic group membership decisions on resource limits  (faculty > staff > student)  Institution can be inferred from @xyz.edu in addition to using idp_name above. |
-| eppn | String, typically institutional email | Institutional IdP | eduPersonPrincipalName |
+| subject-id | String, typically institutional email | Institutional IdP | eduPersonPrincipalName or eppn|
 | email | String | Institutional IdP | |
 | cert_subject_dn | String /DC=org/DC=cilogon/C=US/O=University of North Carolina at Chapel Hill/CN=Ilya Baldin T2758558 | CI Logon | Can be useful if we also use CI Logon-issued certs. |
-| fabric_role | Project Lead, Project Owner, Project Member | FABRIC/CI Logon |   |
-| fabric_project | String | FABRIC/CI Logon |   |
+| fabric-role | Project Lead, Project Owner, Project Member | FABRIC/CI Logon |   |
+| fabric-project | String | FABRIC/CI Logon |   |
 
 ### Resource Attributes
 
 | Attribute | Values or Type | Notes |
 | --- | --- | --- |
-| auth_resource_type | project, slice, sliver | Top level resource type for authorization |
-| sliver_category |     | Applies only to slivers |
-| sliver_size     | Integer | Applies only to slivers |
-| sliver_count    | Integer | Applies only to slivers |
+| resource-type | project, slice, sliver | Top level resource type for authorization |
+| resource-creator | String |  |
+| sliver-type |     | Applies only to slivers |
+| sliver-size     | Integer | Applies only to slivers |
+| sliver-count    | Integer | Applies only to slivers |
 
 
 ### Actions and Action Attributes
 
-| Action | Additional action attributes | Notes |
+| Action | Subject resource type | Additional attributes |
 | --- | --- | --- |
-| createProject |   |   |
-| deleteProject |   |   |
-| addOwner      |   |   |
-| removeOwner   |   |   |
-| addMember     |   |   |
-| removeMember  |   |   |
+| createProject | project  |   |
+| deleteProject | project  |   |
+| addOwner      | project  |   |
+| removeOwner   | project  |   |
+| addMember     | project  |   |
+| removeMember  | project  |   |
+| create   | slice, sliver  |   |
+| delete   | slice, sliver  |   |
+| modify   | slice, sliver  |   |
 
 ## Formal Specification
 
