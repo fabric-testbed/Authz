@@ -22,7 +22,7 @@
       <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">project</AttributeValue>
     </Attribute>
     <Attribute IncludeInResult="false" AttributeId="urn:fabric:xacml:attributes:resource-creator">
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ibaldin@unc.edu</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ibin@unc.edu</AttributeValue>
     </Attribute>
   </Attributes>
   <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">

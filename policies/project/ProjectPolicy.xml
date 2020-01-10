@@ -332,6 +332,18 @@
                 MustBePresent="false"/>
             </Apply>
           </Apply>
+          <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of-any">
+            <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
+            <AttributeDesignator
+              AttributeId="urn:fabric:xacml:attributes:fabric-role"
+              DataType="http://www.w3.org/2001/XMLSchema#string"
+              Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+              MustBePresent="true"
+            />
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+              <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">facilityOperator</AttributeValue>
+            </Apply>
+          </Apply>
         </Apply>
       </Condition>
     </Rule>
