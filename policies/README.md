@@ -64,8 +64,8 @@ Using CI Logon many of the EduCause attributes should be available, see here.
 | subject-id | String, typically institutional email | Institutional IdP | eduPersonPrincipalName or eppn|
 | email | String | Institutional IdP | |
 | cert_subject_dn | String /DC=org/DC=cilogon/C=US/O=University of Blah/CN=FirstName LastName T1234567 | CI Logon | Can be useful if we also use CI Logon-issued certs. |
-| fabric-role | Project Lead, Project Owner, Project Member | FABRIC/CI Logon |   |
-| fabric-project | String | FABRIC/CI Logon |   |
+| fabric-role | Project Lead, Project Owner, Project Member | FABRIC/CI Logon | fabric role can be a predicate of arity 1 or 2: projectLead(Alice), but projectOwner(Alice, Project-X).  |
+| fabric-project | String | FABRIC/CI Logon |  Needs to relate to fabric role above |
 
 ### Resource Attributes
 
