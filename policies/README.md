@@ -12,25 +12,28 @@ The document follows the approach defined [here](https://stackoverflow.com/quest
 
 Privileges in FABRIC are granted based on grouping. Each group, referred to as a project has a specific set of rights limiting their use of resources on a specific subset of aggregates. Resource provisioning is limited at two levels - that of a control framework broker (could be multiple brokers; brokers are optional in small deployments) and at the level of individual aggregate managers issuing resources. Brokers enforce federation-level policies, while aggregate managers, under the control of their respective owners, enforce individual aggregate-level policies. Federation- or aggregate-level policies use project membership information, alongside other available identity attributes to make their authorization decisions. Policies can additionally use constraints like time-of-day and requested, available and used resource type and unit levels as part of the access decision process.
 
-A control framework controller/orchestrator interacting with brokers and aggregate managers acts as part of a user tool-chain and acts on behalf (speaks-as) the user inheriting her permissions.
+A control framework controller/orchestrator interacting with brokers and aggregate managers acts as part of a user tool-chain and acts on behalf (speaks-as) the user inheriting her permissions. Measurements are treated as resources, provisioned via the measurement framework. Additionally rights are granted to certain users enabling them to create projects and manage project memberships.
 
-Measurements are treated as resources, provisioned via the measurement framework.
 
-Additionally rights are granted to certain users enabling them to create projects and manage project memberships.
+The following logical predicates reflect role assignments in FABRIC:
+- projectLead(principal)
+- facilityOperator(principal) [where facility implies FABRIC-wide]
+- projectOwner(principal, project)
+- projectMember(principal, project)
 
-A Project Lead can create new projects. Project Lead may add or remove Project Owners to their project. Project Lead becomes project owner by default.
 
-A Project Owner may add or remove project members. Project Owners are also project members.
+A Project Lead can create new projects. Project Lead may add or remove Project Owners to their project (project they created). Project Lead becomes project owner by default.
 
-A Project Member may create slices assigned to the corresponding project. Slice creation requires a membership in a valid project. A project member can provision resources/add slivers into a valid slice subject to resource limits. A slice may contain slivers created by different project members. A sliver can only be modified or deleted by the project member who created it or by a project owner with one exception: slivers belonging to different project members are automatically allowed to be stitched together as necessary (i.e. if adding a sliver from Alice to a slice requires modifying another sliver already created by Bob, permission is automatically granted assuming Alice and Bob are members of the same project).
+A Project Owner may add or remove project members for the projects they own. Project Owners are also project members.
 
-There are different types of resource limits. All resource limits are by sliver type, size and count (i.e. ‘Alice cannot hold more than 3 large apples, 2 small apples and 5 pears at a time’). Limits can be applied at different scopes (i.e. federation-level and aggregate-level). Limits can be imposed on
-Individual principals (based on their specific identity, their home institution, or their group within an institution, as asserted by the institutional IdP, i.e. student, faculty or staff).
+A Project Member may create slices assigned to their corresponding project(s). Slice creation requires a membership in a valid project. A project member can provision resources/add slivers into a valid slice subject to resource federation- or aggregate-level resource constraints. A slice may contain slivers created by different project members. A sliver can only be modified or deleted by the project member who created it or by a project owner with one exception: slivers belonging to different project members are automatically allowed to be stitched together as necessary (i.e. if adding a sliver from Alice to a slice requires modifying another sliver already created by Bob, permission is automatically granted assuming Alice and Bob are members of the same project).
+
+There are different types of resource constraints. All resource constraints are by sliver type, size and count (i.e. ‘Alice cannot hold more than 3 large apples, 2 small apples and 5 pears at a time’). Constraints can be applied at different scopes (i.e. federation-level and aggregate-level). Constraints can be imposed on Individual principals (based on their specific identity, their home institution, or their group within an institution, as asserted by the institutional IdP, i.e. student, faculty or staff).
 Individual projects
 
 Additional constraints for resource provisioning policies can come from
-Calendar time or date (i.e. for a specific aggregate ‘during exam week only make resources available only to users from home institution’)
-Available resource thresholds (i.e. ‘if fewer than 5 apples are left available, only home institution users can have them’)
+- Calendar time or date (i.e. for a specific aggregate ‘during exam week only make resources available only to users from home institution’)
+- Available resource thresholds (i.e. ‘if fewer than 5 apples are left available, only home institution users can have them’)
 
 ## Semi-Formal Specification
 
