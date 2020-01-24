@@ -66,6 +66,13 @@
               </Apply>
         </Condition>
       </Rule>
+      <AdviceExpressions>
+        <AdviceExpression AdviceId="urn:fabric:authz:advice:deny-error" AppliesTo="Deny">
+          <AttributeAssignmentExpression AttributeId="urn:fabric:authz:attribute:pep-message">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Only project leads and facility operators can create and delete projects.</AttributeValue>
+          </AttributeAssignmentExpression>
+        </AdviceExpression>
+      </AdviceExpressions>
     </Policy>
     <!-- delete projects -->
     <Policy
@@ -149,6 +156,13 @@
           </Apply>
         </Condition>
       </Rule>
+      <AdviceExpressions>
+        <AdviceExpression AdviceId="urn:fabric:authz:advice:deny-error" AppliesTo="Deny">
+          <AttributeAssignmentExpression AttributeId="urn:fabric:authz:attribute:pep-message">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Facility leads can delete only projects they created.</AttributeValue>
+          </AttributeAssignmentExpression>
+        </AdviceExpression>
+      </AdviceExpressions>
     </Policy>
     <!-- manage owners -->
     <Policy
@@ -243,6 +257,13 @@
           </Apply>
         </Condition>
       </Rule>
+      <AdviceExpressions>
+        <AdviceExpression AdviceId="urn:fabric:authz:advice:deny-error" AppliesTo="Deny">
+          <AttributeAssignmentExpression AttributeId="urn:fabric:authz:attribute:pep-message">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Only project leads and facility operators can change project owners.</AttributeValue>
+          </AttributeAssignmentExpression>
+        </AdviceExpression>
+      </AdviceExpressions>
     </Policy>
     <!-- manage members -->
     <Policy PolicyId="urn:fabric:authz:xacml:ProjectExamle1:ManageProjectMembers"
@@ -347,5 +368,12 @@
         </Apply>
       </Condition>
     </Rule>
+    <AdviceExpressions>
+      <AdviceExpression AdviceId="urn:fabric:authz:advice:deny-error" AppliesTo="Deny">
+        <AttributeAssignmentExpression AttributeId="urn:fabric:authz:attribute:pep-message">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Only project owners and facility operators can change project membership.</AttributeValue>
+        </AttributeAssignmentExpression>
+      </AdviceExpression>
+    </AdviceExpressions>
     </Policy>
   </PolicySet>
