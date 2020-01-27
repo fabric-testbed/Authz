@@ -39,19 +39,19 @@ Additional constraints for resource provisioning policies can come from
 
 1. Project Lead can create projects
 1. Project Lead can delete the project they created
+1. Facility Operator can remove any project
 1. Project Lead can add and remove Project Owners from projects they created
+1. Facility Operator can add and remove Project Owners from any project
 1. Project Lead is also a Project Owner
 1. Project Owner can add and remove Project Members from their project
+1. Facility Operator is also a Project Owner for any project (can add remove members)
 1. Project Owner is also a Project Member
 1. Project Member can create slices within a project
-1. Project Member can create slivers within any project slice subject to federation- or aggregate-level resource limits
-1. Project Member can modify or delete any sliver created by them in any project slice. Modify operations are subject to federation- and aggregate-level resource limits.
-1. Project Owner can modify or delete any sliver belonging to a slice created within their project. Modify operations are subject to federation- and aggregate-level resource limits.
 1. Project Member can delete a slice they created, as long as no slivers created by other members exist in the slice
-1. Facility Operator can remove any project
-1. Facility Operator can add and remove Project Owners from any project
-1. Facility Operator is also a Project Owner for any project (can add remove members)
-1. Facility Operator is also a Project Member for any project (can create/delete slices and slivers)
+1. Project Member can create slivers within any project slice subject to federation- or aggregate-level resource constraints
+1. Project Member can modify or delete any sliver created by them in any project slice. Modify operations are subject to federation- and aggregate-level resource constraints.
+1. Project Owner can modify or delete any sliver belonging to a slice created within their project. Modify operations are subject to federation- and aggregate-level resource constraints.
+1. Facility Operator is also a Project Member for any project (can create/delete slices and slivers) subject to project resource constraints.
 
 ## Attributes
 
