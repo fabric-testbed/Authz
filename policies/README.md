@@ -252,7 +252,7 @@ Policies and associated example requests are defined in the following subdirecto
 1. Modify pdp.xml to (a) point to the policy XML file you are testing and (b) make sure rootPolicyRef element URN matches that at the top of your policy
 1. Execute as follows and observe the result:
 ```
-$ ./authzforce-ce-core-pdp-cli-14.0.1.jar pdp.xml <request path>/requestfile.xml
+$ ./authzforce-ce-core-pdp-cli-14.0.1.jar -p pdp.xml <request path>/requestfile.xml
 ```
 
 ## Useful references
