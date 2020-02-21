@@ -191,12 +191,14 @@ policyset sliver {
       apply denyUnlessPermit
       rule createSliver {
         /* can create within any project slice */
+        target clause profile "simple"
         permit
         (condition user.fabric_role == concat("projectMember:", slice.project_name) or
           user.fabric_role == concat("projectOwner:", slice.project_name))
 
       }
       rule createSliverWithCalendarLimits {
+        target clause profile "calendarLimit"
         /* can create within any project slice, home institution 9-5  */
         permit
         condition (user.fabric_role == concat("projectMember:", slice.project_name) or
@@ -204,8 +206,9 @@ policyset sliver {
           (user.institution == "UNC" and current_time before 9am or after 5pm )
       }
       rule createSliverWithResourceLimits {
+        target clause profile "resourceLimit"
         permit
-        condition (user.fabric_role == concat("projectMember:",sliver.slice_project_name) or
+        condition (user.fabric_role == concat("projectMember:",slice.project_name) or
           user.fabric_role == concat("projectOwner:", slice.project_name)) and
           (project.bandwidth + sliver.bandwidth < project.bandwidth_limit)
       }
