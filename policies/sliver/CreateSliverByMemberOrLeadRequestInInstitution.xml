@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Request ReturnPolicyIdList="false"
+  CombinedDecision="false"
+  xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Attributes Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
+    <Attribute IncludeInResult="false" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ibaldin@unc.edu</AttributeValue>
+    </Attribute>
+    <Attribute IncludeInResult="false" AttributeId="urn:fabric:xacml:attributes:fabric-role">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">projectMember:project-X</AttributeValue>
+    </Attribute>
+    <Attribute IncludeInResult="false" AttributeId="urn:fabric:xacml:attributes:institution">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">UNC</AttributeValue>
+    </Attribute>
+    <!--
+    <Attribute IncludeInResult="false" AttributeId="urn:fabric:xacml:attributes:fabric-role">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">projectOwner:project-X</AttributeValue>
+    </Attribute>
+  -->
+  </Attributes>
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+    <Attribute IncludeInResult="false" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fabric:sliver:sliver-B</AttributeValue>
+    </Attribute>
+    <Attribute IncludeInResult="false" AttributeId="urn:fabric:xacml:attributes:resource-type">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">sliver</AttributeValue>
+    </Attribute>
+  </Attributes>
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">
+    <Attribute IncludeInResult="false" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">createSliver</AttributeValue>
+    </Attribute>
+    <Attribute IncludeInResult="false" AttributeId="urn:fabric:xacml:action:profile">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">calendarLimit</AttributeValue>
+    </Attribute>
+  </Attributes>
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment">
+    <Attribute IncludeInResult="false" AttributeId="urn:oasis:names:tc:xacml:1.0:environment:current-time">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">19:30:10Z</AttributeValue>
+    </Attribute>
+  </Attributes>
+  <Attributes Category="urn:fabric:xacml:categories:slice">
+    <Attribute IncludeInResult="false" AttributeId="urn:fabric:xacml:attributes:slice-name">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fabric:slice:slice-A</AttributeValue>
+    </Attribute>
+    <Attribute IncludeInResult="false" AttributeId="urn:fabric:xacml:attributes:project-name">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">project-X</AttributeValue>
+    </Attribute>
+  </Attributes>
+</Request>

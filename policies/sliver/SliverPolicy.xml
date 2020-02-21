@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PolicySet xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"
+  PolicySetId="urn:fabric:authz:xacml:SliverExample1"
+  PolicyCombiningAlgId="urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:first-applicable"
+  Version="1.0">
+  <Description>
+    Example of a sliver management policy for FABRIC.
+  </Description>
+  <Target>
+    <AnyOf>
+      <AllOf>
+        <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+          <AttributeValue
+              DataType="http://www.w3.org/2001/XMLSchema#string">sliver</AttributeValue>
+          <AttributeDesignator
+              AttributeId="urn:fabric:xacml:attributes:resource-type"
+              Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+              DataType="http://www.w3.org/2001/XMLSchema#string"
+              MustBePresent="true"/>
+          </Match>
+        </AllOf>
+      </AnyOf>
+    </Target>
+    <!-- Create  sliver -->
+    <Policy
+      PolicyId="urn:fabric:authz:xacml:SliverExamle1:SliverCreate"
+      RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit"
+      Version="1.0">
+      <Description>
+        Sliver creation.
+      </Description>
+      <Target>
+        <AnyOf>
+          <AllOf>
+            <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+              <AttributeValue
+                  DataType="http://www.w3.org/2001/XMLSchema#string">createSliver</AttributeValue>
+              <AttributeDesignator
+                  AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+                  DataType="http://www.w3.org/2001/XMLSchema#string"
+                  Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action"
+                  MustBePresent="false"/>
+            </Match>
+          </AllOf>
+        </AnyOf>
+      </Target>
+      <Rule Effect="Permit"
+        RuleId="urn:fabric:authz:xacml:SliverExample1:SliverCreateRuleSimple">
+        <Description>
+          Simple profile: project members or owners can create slivers in a slice that belongs to their project.
+        </Description>
+        <Target>
+          <AnyOf>
+            <AllOf>
+              <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                <AttributeValue
+                    DataType="http://www.w3.org/2001/XMLSchema#string">simple</AttributeValue>
+                <AttributeDesignator
+                    AttributeId="urn:fabric:xacml:action:profile"
+                    DataType="http://www.w3.org/2001/XMLSchema#string"
+                    Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action"
+                    MustBePresent="false"/>
+              </Match>
+            </AllOf>
+          </AnyOf>
+        </Target>
+        <Condition>
+          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of-any">
+              <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
+                <AttributeDesignator
+                  AttributeId="urn:fabric:xacml:attributes:fabric-role"
+                  DataType="http://www.w3.org/2001/XMLSchema#string"
+                  Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                  MustBePresent="true"
+                />
+              <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:map">
+                <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:string-concatenate"/>
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">projectOwner:</AttributeValue>
+                  <AttributeDesignator
+                    AttributeId="urn:fabric:xacml:attributes:project-name"
+                    DataType="http://www.w3.org/2001/XMLSchema#string"
+                    Category="urn:fabric:xacml:categories:slice"
+                    MustBePresent="false"/>
+              </Apply>
+            </Apply>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of-any">
+              <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
+                <AttributeDesignator
+                  AttributeId="urn:fabric:xacml:attributes:fabric-role"
+                  DataType="http://www.w3.org/2001/XMLSchema#string"
+                  Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                  MustBePresent="true"
+                />
+              <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:map">
+                <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:string-concatenate"/>
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">projectMember:</AttributeValue>
+                  <AttributeDesignator
+                    AttributeId="urn:fabric:xacml:attributes:project-name"
+                    DataType="http://www.w3.org/2001/XMLSchema#string"
+                    Category="urn:fabric:xacml:categories:slice"
+                    MustBePresent="false"/>
+              </Apply>
+            </Apply>
+          </Apply>
+        </Condition>
+      </Rule>
+      <Rule Effect="Permit"
+        RuleId="urn:fabric:authz:xacml:SliverExample1:SliverCreateRuleByInstitution">
+        <Description>
+          Limit by calendar: project members or owners can create slivers in a slice that belongs to their project and
+          only users from specific institution can create slivers between 9am and 5pm.
+        </Description>
+        <Target>
+          <AnyOf>
+            <AllOf>
+              <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                <AttributeValue
+                    DataType="http://www.w3.org/2001/XMLSchema#string">calendarLimit</AttributeValue>
+                <AttributeDesignator
+                    AttributeId="urn:fabric:xacml:action:profile"
+                    DataType="http://www.w3.org/2001/XMLSchema#string"
+                    Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action"
+                    MustBePresent="false"/>
+              </Match>
+            </AllOf>
+          </AnyOf>
+        </Target>
+        <Condition>
+          <!-- note that these conditions are indeterminate if institution doesn;t match,
+          then the rule-combining algo kicks in and makes it a deny, so having advice on
+          deny per rule doesn't work -->
+          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+              <!-- match role in the project -->
+              <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of-any">
+                <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
+                  <AttributeDesignator
+                    AttributeId="urn:fabric:xacml:attributes:fabric-role"
+                    DataType="http://www.w3.org/2001/XMLSchema#string"
+                    Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                    MustBePresent="true"
+                  />
+                  <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:map">
+                    <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:string-concatenate"/>
+                      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">projectMember:</AttributeValue>
+                      <AttributeDesignator
+                        AttributeId="urn:fabric:xacml:attributes:project-name"
+                        DataType="http://www.w3.org/2001/XMLSchema#string"
+                        Category="urn:fabric:xacml:categories:slice"
+                        MustBePresent="false"/>
+                  </Apply>
+              </Apply>
+            </Apply>
+            <!-- match institution and time of day -->
+            <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of-any">
+              <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
+              <AttributeDesignator
+                AttributeId="urn:fabric:xacml:attributes:institution"
+                DataType="http://www.w3.org/2001/XMLSchema#string"
+                Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                MustBePresent="true"
+                />
+              <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">UNC</AttributeValue>
+              </Apply>
+            </Apply>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:time-in-range">
+              <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:time-one-and-only">
+                <AttributeDesignator
+                  AttributeId="urn:oasis:names:tc:xacml:1.0:environment:current-time"
+                  DataType="http://www.w3.org/2001/XMLSchema#time"
+                  Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                  MustBePresent="true"
+                  />
+              </Apply>
+              <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">09:00:00Z</AttributeValue>
+              <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">17:00:00Z</AttributeValue>
+            </Apply>
+          </Apply>
+        </Condition>
+      </Rule>
+      <AdviceExpressions>
+        <AdviceExpression AdviceId="urn:fabric:authz:advice:deny-error" AppliesTo="Deny">
+          <AttributeAssignmentExpression AttributeId="urn:fabric:authz:attribute:pep-message">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Only project members and owners belonging to UNC can create slivers in a slice belonging to their project.</AttributeValue>
+          </AttributeAssignmentExpression>
+        </AdviceExpression>
+      </AdviceExpressions>
+    </Policy>
+  </PolicySet>

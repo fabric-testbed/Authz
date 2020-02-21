@@ -14,26 +14,21 @@ Privileges in FABRIC are granted based on grouping. Each group, referred to as a
 
 A control framework controller/orchestrator interacting with brokers and aggregate managers acts as part of a user tool-chain and acts on behalf (speaks-as) the user inheriting her permissions. Measurements are treated as resources, provisioned via the measurement framework. Additionally rights are granted to certain users enabling them to create projects and manage project memberships.
 
-
 The following logical predicates reflect role assignments in FABRIC:
-- projectLead(principal)
-- facilityOperator(principal) [where facility implies FABRIC-wide]
-- projectOwner(principal, project)
-- projectMember(principal, project)
+- projectLead(principal): a project lead can create new projects. Project Lead may add or remove Project Owners to their project (project they created). Project Lead becomes project owner by default.
+- facilityOperator(principal) [where facility implies FABRIC-wide]: a facility operator can create and delete any project and manage owners and members of any project. Facility operator can create slivers in any project subject to project resource constraints.
+- projectOwner(principal, project): a project Owner may add or remove project members for the projects they own. Project Owners are also project members.
+- projectMember(principal, project):  a project Member may create slices assigned to their corresponding project(s). Slice creation requires a membership in a valid project. A project member can provision resources/add slivers into a valid slice subject to resource federation- or aggregate-level resource constraints. A slice may contain slivers created by different project members. A sliver can only be modified or deleted by the project member who created it or by a project owner with one exception: slivers belonging to different project members are automatically allowed to be stitched together as necessary (i.e. if adding a sliver from Alice to a slice requires modifying another sliver already created by Bob, permission is automatically granted assuming Alice and Bob are members of the same project).
 
-
-A Project Lead can create new projects. Project Lead may add or remove Project Owners to their project (project they created). Project Lead becomes project owner by default.
-
-A Project Owner may add or remove project members for the projects they own. Project Owners are also project members.
-
-A Project Member may create slices assigned to their corresponding project(s). Slice creation requires a membership in a valid project. A project member can provision resources/add slivers into a valid slice subject to resource federation- or aggregate-level resource constraints. A slice may contain slivers created by different project members. A sliver can only be modified or deleted by the project member who created it or by a project owner with one exception: slivers belonging to different project members are automatically allowed to be stitched together as necessary (i.e. if adding a sliver from Alice to a slice requires modifying another sliver already created by Bob, permission is automatically granted assuming Alice and Bob are members of the same project).
-
-There are different types of resource constraints. All resource constraints are by sliver type, size and count (i.e. ‘Alice cannot hold more than 3 large apples, 2 small apples and 5 pears at a time’). Constraints can be applied at different scopes (i.e. federation-level and aggregate-level). Constraints can be imposed on Individual principals (based on their specific identity, their home institution, or their group within an institution, as asserted by the institutional IdP, i.e. student, faculty or staff).
-Individual projects
+There are different types of resource constraints. All resource constraints are by sliver type, size and count (i.e. ‘Alice cannot hold more than 3 large apples, 2 small apples and 5 pears at a time’). Constraints can be applied at different scopes (i.e. federation-level and aggregate-level).
+- Constraints can be imposed on individual principals (based on their specific identity, their home institution, or their group within an institution, as asserted by the institutional IdP, i.e. student, faculty or staff).
+- Constraints can be imposed on individual projects (a more common scenario) based on project name
 
 Additional constraints for resource provisioning policies can come from
 - Calendar time or date (i.e. for a specific aggregate ‘during exam week only make resources available only to users from home institution’)
-- Available resource thresholds (i.e. ‘if fewer than 5 apples are left available, only home institution users can have them’)
+- Available resource thresholds (i.e. ‘if fewer than 5 large apples are left available, only home institution users can have them’)
+
+It is important to note that the management of PDP policies themselves, including resource constraints, (although possible) is not considered API driven for the purposes of this discussion and thus isn't covered by the described policies.
 
 ## Semi-Formal Specification
 
@@ -186,7 +181,57 @@ policyset slice {
     }
 }
 
+/* this is an example that sets some limits on resources and uses calendar */
 policyset sliver {
+  target clause objectType == "sliver"
+  apply firstApplicable
+
+  policy createSliver {
+      target clause actionId "create"
+      apply denyUnlessPermit
+      rule createSliver {
+        /* can create within any project slice */
+        permit
+        (condition user.fabric_role == concat("projectMember:", slice.project_name) or
+          user.fabric_role == concat("projectOwner:", slice.project_name))
+
+      }
+      rule createSliverWithCalendarLimits {
+        /* can create within any project slice, home institution 9-5  */
+        permit
+        condition (user.fabric_role == concat("projectMember:", slice.project_name) or
+          user.fabric_role == concat("projectOwner:", slice.project_name)) and
+          (user.institution == "UNC" and current_time before 9am or after 5pm )
+      }
+      rule createSliverWithResourceLimits {
+        permit
+        condition (user.fabric_role == concat("projectMember:",sliver.slice_project_name) or
+          user.fabric_role == concat("projectOwner:", slice.project_name)) and
+          (project.bandwidth + sliver.bandwidth < project.bandwidth_limit)
+      }
+  }
+
+  policy modifySliver {
+    target clause actionId "modify"
+    apply denyUnlessPermit
+    rule modifySliver {
+      permit
+      condition
+    }
+    rule modifySliverWithLimits {
+      permit
+      condition
+    }
+  }
+
+  policy deleteSliver {
+    target clause actionId "delete"
+    apply denyUnlessPermit
+    rule deleteSliver {
+        permit
+        condition
+    }
+  }
 }
 ```
 
