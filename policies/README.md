@@ -276,7 +276,7 @@ $ curl --include --header "Content-Type: application/xacml+xml" --data @policies
 ```
 curl --include --header "Content-Type: application/xacml+json" --data @policies/orchestrator-request.json http://localhost:8080/services/pdp
 ```
-(The above example assumes the use of [orchestrator-yes.xml policy](by-actor/orchestrator-yes.xml), the same directory contains example requests both in XML and JSON).
+(The above example assumes the use of [orchestrator-yes.xml policy](by-actor/SimpleYes/orchestrator-yes.xml), the same directory contains example requests both in XML and JSON).
 
 ## Useful references
 
