@@ -1,2 +1,2 @@
 # Authz
-Authz-related example policies and gluecode
+FABRIC example and deployed authorization [policies](policies) and glue code.

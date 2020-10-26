@@ -15,10 +15,13 @@ Privileges in FABRIC are granted based on grouping. Each group, referred to as a
 A control framework controller/orchestrator interacting with brokers and aggregate managers acts as part of a user tool-chain and acts on behalf (speaks-as) the user inheriting her permissions. Measurements are treated as resources, provisioned via the measurement framework. Additionally rights are granted to certain users enabling them to create projects and manage project memberships.
 
 The following logical predicates reflect role assignments in FABRIC (with a view to supporting multiple FABRIC-like facilities):
-- projectLead(principal, facility): a project lead can create new projects specific to a given facility. Project Lead may add or remove Project Owners to their project (project they created). Project Lead becomes project owner by default.
-- facilityOperator(principal, facility): a facility operator can create and delete any project and manage owners and members of any project. Facility operator can create slivers in any project subject to project resource constraints.
-- projectOwner(principal, project): a project Owner may add or remove project members for the projects they own. Project Owners are also project members.
-- projectMember(principal, project):  a project Member may create slices assigned to their corresponding project(s). Slice creation requires a membership in a valid project. A project member can provision resources/add slivers into a valid slice subject to resource federation- or aggregate-level resource constraints. A slice may contain slivers created by different project members. A sliver can only be modified or deleted by the project member who created it or by a project owner with one exception: slivers belonging to different project members are automatically allowed to be stitched together as necessary (i.e. if adding a sliver from Alice to a slice requires modifying another sliver already created by Bob, permission is automatically granted assuming Alice and Bob are members of the same project).
+
+| Role predicate | Description  |
+|---|---|
+| projectLead(principal, facility)  |  A project lead can create new projects specific to a given facility. Project Lead may add or remove Project Owners to their project (project they created). Project Lead becomes project owner by default. |
+| facilityOperator(principal, facility) | A facility operator can create and delete any project and manage owners and members of any project. Facility operator can create slivers in any project subject to project resource constraints. |
+| projectOwner(principal, project) | A project Owner may add or remove project members for the projects they own. Project Owners are also project members. |
+| projectMember(principal, project) | A project Member may create slices assigned to their corresponding project(s). Slice creation requires a membership in a valid project. A project member can provision resources/add slivers into a valid slice subject to resource federation- or aggregate-level resource constraints. A slice may contain slivers created by different project members. A sliver can only be modified or deleted by the project member who created it or by a project owner with one exception: slivers belonging to different project members are automatically allowed to be stitched together as necessary (i.e. if adding a sliver from Alice to a slice requires modifying another sliver already created by Bob, permission is automatically granted assuming Alice and Bob are members of the same project). |
 
 Projects are bound to specific facilities at the time of creation.
 
@@ -34,23 +37,26 @@ It is important to note that the authorization of dynamic management of PDP poli
 
 ## Semi-Formal Specification
 
-1. Project Lead can create projects at a facility
-1. Project Lead can delete the project they created at a facility
-1. Facility Operator can remove any project at a facility
-1. Project Lead can add and remove Project Owners from projects they created at a facility
-1. Facility Operator can add and remove Project Owners from any project at a facility
-1. Project Lead is also a Project Owner
-1. Project Owner can add and remove Project Members from their project at a facility
-1. Facility Operator is also a Project Owner for any project (can add remove members)
-1. Project Owner is also a Project Member
-1. Project Member can create slices within a project at a facility
-1. Project Member can delete a slice they created, as long as no slivers created by other members exist in the slice at a facility
-1. Project Member can create slivers within any project slice subject to federation- or aggregate-level resource constraints at a facility
-1. Project Member can modify or delete any sliver created by them in any project slice. Modify operations are subject to federation- and aggregate-level resource constraints.
-1. Project Owner can modify or delete any sliver belonging to a slice created within their project. Modify operations are subject to federation- and aggregate-level resource constraints.
-1. Facility Operator is also a Project Member for any project (can create/delete slices and slivers) subject to project resource constraints.
 
-The project management policies above are embedded in the [ProjectRegistry](https://github.com/fabric-testbed/project-registry) and CI Logon logic and are only included in this list for completeness. On the other hand policies related to resource provisioning are described using XACML 3.0 and embedded with PDPs attached to individual actors - Orchestrator, Broker and Aggregate Managers. Examples of their implementations can be found below.
+|  Rule  | Implemented in  |
+|---|---|
+| 1. Project Lead can create projects at a facility  |  ProjectRegistry |
+| 2. Project Lead can delete the project they created at a facility | ProjectRegistry |
+| 3. Facility Operator can remove any project at a facility | ProjectRegistry |
+| 4. Project Lead can add and remove Project Owners from projects they created at a facility | ProjectRegistry |
+| 5. Facility Operator can add and remove Project Owners from any project at a facility | ProjectRegistry |
+| 6. Project Lead is also a Project Owner | ProjectRegistry |
+| 7. Project Owner can add and remove Project Members from their project at a facility | ProjectRegistry |
+| 8. Facility Operator is also a Project Owner for any project (can add remove members) | ProjectRegistry |
+| 9. Project Owner is also a Project Member | ProjectRegistry |
+| 10. Project Member can create slices within a project at a facility | XACML PDPs |
+| 11. Project Member can delete a slice they created, as long as no slivers created by other members exist in the slice at a facility | XACML PDPs |
+| 12. Project Member can create slivers within any project slice subject to federation- or aggregate-level resource constraints at a facility | XACML PDPs |
+| 13. Project Member can modify or delete any sliver created by them in any project slice. Modify operations are subject to federation- and aggregate-level resource constraints. | XACML PDPs |
+| 14. Project Owner can modify or delete any sliver belonging to a slice created within their project. Modify operations are subject to federation- and aggregate-level resource constraints. | XACML PDPs |
+| 15. Facility Operator is also a Project Member for any project (can create/delete slices and slivers) subject to project resource constraints. | XACML PDPs |
+
+Some project management policies above are embedded in the [ProjectRegistry](https://github.com/fabric-testbed/project-registry) and CI Logon logic and are only included in this list for completeness. On the other hand policies related to resource provisioning are described using XACML 3.0 and embedded with PDPs attached to individual actors - Orchestrator, Broker and Aggregate Managers. Examples of their implementations can be found below.
 
 ## Attributes
 
