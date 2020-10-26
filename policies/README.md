@@ -1,6 +1,6 @@
 ## Overview
 
-This document defines FABRIC authorization policies to help with implementing production policies using XACML3.0.
+This document defines FABRIC authorization policies to help with implementing production policies using a combination of CILogon and XACML3.0.
 
 FABRIC will rely on a federated identity model and ABAC (Attribute-Based Access Control). Each identity comes with a mix of attributes, some asserted by the institutional IdP (Identity Provider) and some via a FABRIC-specific mechanism (e.g. CoManage). These attributes can be provided to the authorization system in a secure way in order to allow it to make access decisions to various protected APIs. Policies will be specified in XACML and each RESTful API endpoint will be protected by an XACML-capable PDP (Policy Decision Point)
 
@@ -30,7 +30,7 @@ Additional constraints for resource provisioning policies can come from
 - Calendar time or date (i.e. for a specific aggregate ‘during exam week only make resources available only to users from home institution’)
 - Available resource thresholds (i.e. ‘if fewer than 5 large apples are left available, only home institution users can have them’)
 
-It is important to note that the management of PDP policies themselves, including resource constraints, (although possible) is not considered API driven for the purposes of this discussion and thus isn't covered by the described policies.
+It is important to note that the authorization of dynamic management of PDP policies themselves, including resource constraints in them, (although possible) is not considered API driven for the purposes of this discussion and thus isn't covered by the described policies.
 
 ## Semi-Formal Specification
 
@@ -39,7 +39,7 @@ It is important to note that the management of PDP policies themselves, includin
 1. Facility Operator can remove any project at a facility
 1. Project Lead can add and remove Project Owners from projects they created at a facility
 1. Facility Operator can add and remove Project Owners from any project at a facility
-1. Project Lead is also a Project Owner 
+1. Project Lead is also a Project Owner
 1. Project Owner can add and remove Project Members from their project at a facility
 1. Facility Operator is also a Project Owner for any project (can add remove members)
 1. Project Owner is also a Project Member
@@ -49,6 +49,8 @@ It is important to note that the management of PDP policies themselves, includin
 1. Project Member can modify or delete any sliver created by them in any project slice. Modify operations are subject to federation- and aggregate-level resource constraints.
 1. Project Owner can modify or delete any sliver belonging to a slice created within their project. Modify operations are subject to federation- and aggregate-level resource constraints.
 1. Facility Operator is also a Project Member for any project (can create/delete slices and slivers) subject to project resource constraints.
+
+The project management policies above are embedded in the [ProjectRegistry](https://github.com/fabric-testbed/project-registry) and CI Logon logic and are only included in this list for completeness. On the other hand policies related to resource provisioning are described using XACML 3.0 and embedded with PDPs attached to individual actors - Orchestrator, Broker and Aggregate Managers. Examples of their implementations can be found below.
 
 ## Attributes
 
@@ -240,25 +242,45 @@ policyset sliver {
 }
 ```
 
-## Policy implementations
+## Available Policy Implementations
 
 Policies and associated example requests are defined in the following subdirectories:
-- Project level policies and example requests in [project/](project)
-- Slice level policies and example requests in [slice/](slice)
-- Sliver level policies and example requests in [sliver/](sliver)
+- Per actor policies used in *actual deployments* are located in [by-actor](by-actor) folder
+- Example project level policies and example requests in [project/](project) (Note: these are not used and implemented as precedural code in ProjectRegistry instead)
+- Example sliver level policies and example requests in [sliver/](sliver) (Note: provided as examples only)
 
-## Testing with authzforce server
+Note that each folder typically contains policies as well as example requests both in XML and in JSON.
+
+## Testing with Authzforce server
+
+Note that as of Java 9, jaxb libraries have been removed from standard JDK distributions and thus will not work according to instrucitons above (which only apply to Java8) - appropriate jars must be added to classpath externally. When in doubt use the pre-packaged [PDP Docker Images](https://github.com/fabric-testbed/fabric-docker-images) which include command tools in addition to the PDP server.
 
 1. Download the latest [authzforce-ce-core-pdp-cli-X.Y.Z](https://github.com/authzforce/core) and follow instructions
 1. Download the latest [configuration and example policy folder](https://github.com/authzforce/core/tree/develop/pdp-cli/src/test/resources/conformance/xacml-3.0-core/mandatory)
-1. Modify pdp.xml to (a) point to the policy XML file you are testing and (b) make sure rootPolicyRef element URN matches that at the top of your policy
+1. Modify pdp.xml to (a) point to the policy XML file you are testing and (b) make sure `rootPolicyRef` element URN matches that of the `PolicySetId` at the top of your policy
 1. Execute as follows and observe the result:
 ```
 $ ./authzforce-ce-core-pdp-cli-14.0.1.jar -p pdp.xml <request path>/requestfile.xml
 ```
+1. To try JSON instead of XML the following command should produce the result:
+```
+$ ./authzforce-ce-core-pdp-cli-14.0.0.jar -p -t XACML_JSON pdp.xml <request path>/requestfile.json
+```
+
+If you have a PDP RESTful server running in a [Docker container](https://github.com/fabric-testbed/fabric-docker-images) you can issue curl requests as follows to test:
+1. XML requests and responses:
+```
+$ curl --include --header "Content-Type: application/xacml+xml" --data @policies/orchestrator-request.xml http://localhost:8080/services/pdp | tidy -xml -i -
+```
+1. JSON requests and responses:
+```
+curl --include --header "Content-Type: application/xacml+json" --data @policies/orchestrator-request.json http://localhost:8080/services/pdp
+```
+(The above example assumes the use of [orchestrator-yes.xml policy](by-actor/orchestrator-yes.xml), the same directory contains example requests both in XML and JSON).
 
 ## Useful references
 
+- [XACML 3.0 spec](https://docs.oasis-open.org/xacml/3.0/xacml-3.0-core-spec-os-en.html)
 - [StackOverflow example](https://stackoverflow.com/questions/41473752/complex-authorization-using-xacml)
 - [XACML3 spec](https://docs.oasis-open.org/xacml/3.0/xacml-3.0-core-spec-os-en.html#_Toc325047132)
 - [FIWARE Tutorial](https://github.com/FIWARE/tutorials.XACML-Access-Rules)
