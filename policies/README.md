@@ -259,7 +259,7 @@ Note that each folder typically contains policies as well as example requests bo
 
 ## Testing with Authzforce server
 
-Note that as of Java 9, jaxb libraries have been removed from standard JDK distributions and thus will not work according to instrucitons here (which only apply to Java8) - appropriate jars must be added to classpath externally. When in doubt use the pre-packaged [PDP Docker Images](https://github.com/fabric-testbed/fabric-docker-images) which include command tools in addition to the RESTful PDP server.
+Note that as of Java 9, jaxb libraries have been removed from standard JDK distributions and thus will not work according to instrucitons here (which only apply to Java8) - appropriate jars must be added to classpath externally. When in doubt use the pre-packaged [PDP Docker Images](https://github.com/fabric-testbed/fabric-docker-images/tree/master/authzforce-pdp) which include command tools in addition to the RESTful PDP server.
 
 1. Download the latest [authzforce-ce-core-pdp-cli-X.Y.Z](https://github.com/authzforce/core) and follow instructions
 1. Download the latest [configuration and example policy folder](https://github.com/authzforce/core/tree/develop/pdp-cli/src/test/resources/conformance/xacml-3.0-core/mandatory)
@@ -273,7 +273,7 @@ $ ./authzforce-ce-core-pdp-cli-14.0.1.jar -p pdp.xml <request path>/requestfile.
 $ ./authzforce-ce-core-pdp-cli-14.0.0.jar -p -t XACML_JSON pdp.xml <request path>/requestfile.json
 ```
 
-If you have a PDP RESTful server running in a [Docker container](https://github.com/fabric-testbed/fabric-docker-images) you can issue curl requests as follows to test:
+If you have a PDP RESTful server running in a [Docker container](https://github.com/fabric-testbed/fabric-docker-images/tree/master/authzforce-pdp) you can issue curl requests as follows to test:
 1. XML requests and responses:
 ```
 $ curl --include --header "Content-Type: application/xacml+xml" --data @policies/orchestrator-request.xml http://localhost:8080/services/pdp | tidy -xml -i -
