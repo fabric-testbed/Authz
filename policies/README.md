@@ -4,9 +4,9 @@ This document defines FABRIC authorization policies to help with implementing pr
 
 FABRIC will rely on a federated identity model and ABAC (Attribute-Based Access Control). Each identity comes with a mix of attributes, some asserted by the institutional IdP (Identity Provider) and some via a FABRIC-specific mechanism (e.g. CoManage). These attributes can be provided to the authorization system in a secure way in order to allow it to make access decisions to various protected APIs. Policies will be specified in XACML and each RESTful API endpoint will be protected by an XACML-capable PDP (Policy Decision Point)
 
-For the purposes of this document a FABRIC deployment consists of multiple sites presenting different RESTful services focused on provisioning of resources and measurements. Different sites (aggregates) may use different policies with respect to user permissions (provider autonomy). In addition to resources in multiple sites and measurements, permissions must also be managed on various actions within the FABRIC portal. The goal of this document is to define a set of initial policies so they can be implemented in XACML and other mechanisms and properly evaluated.
+For the purposes of this document a FABRIC deployment consists of multiple sites presenting different RESTful services focused on provisioning of resources and measurements. Different sites (aggregates) may use different policies with respect to user permissions (provider autonomy). In addition to resources in multiple sites and measurements, permissions must also be managed on various actions within the FABRIC portal. The goal of this document is to define a set of  policies so they can be implemented in XACML and other mechanisms.
 
-The document follows the approach defined [here](https://stackoverflow.com/questions/41473752/complex-authorization-using-xacml) in defining the specification.
+The design of the policies follows the approach defined [here](https://stackoverflow.com/questions/41473752/complex-authorization-using-xacml) in defining the specification.
 
 ## Informal Specification
 
@@ -23,7 +23,7 @@ The following logical predicates reflect role assignments in FABRIC (with a view
 | projectOwner(principal, project) | A project Owner may add or remove project members for the projects they own. Project Owners are also project members. |
 | projectMember(principal, project) | A project Member may create slices assigned to their corresponding project(s). Slice creation requires a membership in a valid project. A project member can provision resources/add slivers into a valid slice subject to resource federation- or aggregate-level resource constraints. A slice may contain slivers created by different project members. A sliver can only be modified or deleted by the project member who created it or by a project owner with one exception: slivers belonging to different project members are automatically allowed to be stitched together as necessary (i.e. if adding a sliver from Alice to a slice requires modifying another sliver already created by Bob, permission is automatically granted assuming Alice and Bob are members of the same project). |
 
-Projects are bound to specific facilities at the time of creation.
+Projects are bound to specific facilities at the time of creation, thus effectively adding a `facility` parameter to projectOwner and projectMember predicates. 
 
 There are different types of resource constraints. All resource constraints are by sliver type, size and count (i.e. ‘Alice cannot hold more than 3 large apples, 2 small apples and 5 pears at a time’). Constraints can be applied at different scopes (i.e. federation-level and aggregate-level).
 - Constraints can be imposed on individual principals (based on their specific identity, their home institution, or their group within an institution, as asserted by the institutional IdP, i.e. student, faculty or staff).
@@ -56,7 +56,7 @@ It is important to note that the authorization of dynamic management of PDP poli
 | 14. Project Owner can modify or delete any sliver belonging to a slice created within their project. Modify operations are subject to federation- and aggregate-level resource constraints. | XACML PDPs |
 | 15. Facility Operator is also a Project Member for any project (can create/delete slices and slivers) subject to project resource constraints. | XACML PDPs |
 
-Some project management policies above are embedded in the [ProjectRegistry](https://github.com/fabric-testbed/project-registry) and CI Logon logic and are only included in this list for completeness. On the other hand policies related to resource provisioning are described using XACML 3.0 and embedded with PDPs attached to individual actors - Orchestrator, Broker and Aggregate Managers. Examples of their implementations can be found below.
+Some project management policies above are embedded in the [ProjectRegistry](https://github.com/fabric-testbed/project-registry) and CI Logon logic and are only included in this list for completeness. On the other hand policies related to resource provisioning are described using XACML 3.0 and embedded with PDPs attached to individual actors - Orchestrator, Broker and Aggregate Managers. Examples of their implementations can be found below. Those policies can be found in this repo. 
 
 ## Attributes
 
@@ -259,7 +259,7 @@ Note that each folder typically contains policies as well as example requests bo
 
 ## Testing with Authzforce server
 
-Note that as of Java 9, jaxb libraries have been removed from standard JDK distributions and thus will not work according to instrucitons above (which only apply to Java8) - appropriate jars must be added to classpath externally. When in doubt use the pre-packaged [PDP Docker Images](https://github.com/fabric-testbed/fabric-docker-images) which include command tools in addition to the PDP server.
+Note that as of Java 9, jaxb libraries have been removed from standard JDK distributions and thus will not work according to instrucitons here (which only apply to Java8) - appropriate jars must be added to classpath externally. When in doubt use the pre-packaged [PDP Docker Images](https://github.com/fabric-testbed/fabric-docker-images) which include command tools in addition to the RESTful PDP server.
 
 1. Download the latest [authzforce-ce-core-pdp-cli-X.Y.Z](https://github.com/authzforce/core) and follow instructions
 1. Download the latest [configuration and example policy folder](https://github.com/authzforce/core/tree/develop/pdp-cli/src/test/resources/conformance/xacml-3.0-core/mandatory)
