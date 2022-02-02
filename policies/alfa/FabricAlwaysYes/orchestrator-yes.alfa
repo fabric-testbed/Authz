@@ -1,0 +1,42 @@
+namespace fabricYes {
+    advice reasonToDeny = "urn:fabric:authz:xacml:orchestrator:a:deny"
+
+    policyset OrchestratorYesPolicy = "urn:fabric:authz:xacml:orchestrator:ps" {
+        apply firstApplicable
+
+        policyset queryPolicy = "urn:fabric:authz:xacml:orchestrator:p:query" {
+            target clause Attributes.actionId == "query"
+            apply denyUnlessPermit
+            
+            // policy for querying users
+            policy queryUser = "urn:fabric:authz:xacml:orchestrator:p:queryuser" {
+                target clause Attributes.resourceType == "user"
+                apply denyUnlessPermit
+                
+                // permit rule for everyone
+                rule {
+                    permit
+                    on deny {
+                        advice reasonToDeny {
+                            Attributes.message = "You can't do this thing"
+                        }
+                    }
+                }
+            }
+
+            policy querySlice = "urn:fabric:authz:xacml:orchestrator:p:queryslice" {
+                target clause Attributes.resourceType == "slice"
+                apply denyUnlessPermit
+
+                rule {
+                    permit
+                    on deny {
+                        advice reasonToDeny {
+                            Attributes.message = "You can't do this thing "
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

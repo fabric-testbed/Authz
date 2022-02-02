@@ -1,0 +1,123 @@
+namespace fabricTags {
+    advice reasonToDeny = "urn:fabric:authz:xacml:orchestrator:a:deny"
+
+    policyset OrchestratorTags = "urn:fabric:authz:xacml:orchestrator:tags" {
+        apply permitUnlessDeny
+
+        // if any policy sets below say deny, we deny
+
+        // applies to create and modify operations
+        policyset CreateModifyTags = "urn:fabric:authz:xacml:orchestrator:tags:createmodify" {
+            target
+                clause Attributes.actionId == "create"
+                    or Attributes.actionId == "modify"
+            apply permitUnlessDeny
+
+            //
+            // Each of the following policies for each resource type must explicitly say 'permit'
+            // or else the policy fails
+            policyset createVM = "urn:fabric:authz:xacml:orchestrator:tags:createmodify:vm" {
+                target clause Attributes.resourceType == "sliver"
+                apply denyUnlessPermit
+
+                // deal with creation of VMs 
+                policy createVMSize = "urn:fabric:authz:xacml:orchestrator:tags:createmodify:vmsize" {
+                    target clause Attributes.resourceType == "sliver"
+                    // we have precise deny rules, we permit otherwise
+                    apply permitUnlessDeny
+
+                    rule vmSizeCPU {
+                        deny
+                        condition Attributes.resourceVMCPUs > 2 && not(Attributes.projectTag == "VM.NoLimitCPU")
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Your project is lacking VM.NoLimitCPU or VM.NoLimit tag to provision VM this size"
+                            }
+                        }
+                    }
+                    rule vmSizeDisk {
+                        deny
+                        condition Attributes.resourceVMDisk > 10 && not(Attributes.projectTag == "VM.NoLimitDisk")
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Your project is lacking VM.NoLimitDisk or VM.NoLimit tag to provision VM this size"
+                            }
+                        }
+                    }
+                    rule vmSizeRAM {
+                        deny
+                        condition Attributes.resourceVMRAM > 10 && not(Attributes.projectTag == "VM.NoLimitRAM")
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Your project is lacking VM.NoLimitRAM or VM.NoLimit tag to provision VM this size"
+                            }
+                        }
+                    }
+                }
+
+                // deal with creation of VMs with no limits
+                policy createVMAnySize = "urn:fabric:authz:xacml:orchestrator:tags:createmodify:vmany" {
+                    target clause Attributes.resourceType == "sliver"
+                    apply permitUnlessDeny
+
+                    rule vmSizeAny {
+                        deny
+                        condition (Attributes.resourceVMCPUs > 2 || Attributes.resourceVMRAM > 10 || Attributes.resourceVMDisk > 10) &&
+                            not(Attributes.projectTag == "VM.NoLimit")
+                    }
+                }
+            }
+
+            // this is for components
+            policyset createComponents = "urn:fabric:authz:xacml:orchestrator:tags:createmodify:component" {
+                target clause Attributes.resourceType == "sliver"
+                apply denyUnlessPermit
+
+                policy withComponent = "urn:fabric:authz:xacml:orchestrator:tags:createmodify:addcomponent"  {
+                    target clause Attributes.resourceType == "sliver"
+                    apply permitUnlessDeny
+
+                    rule addGPU {
+                        deny
+                        condition Attributes.resourceComponent == "GPU" && not(Attributes.projectTag == "Component.GPU")
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Your project is lacking Component.GPU tag to provision a VM with GPU"
+                            }
+                        }
+                    }
+
+                    rule addSmartNIC {
+                        deny
+                        condition Attributes.resourceComponent == "SmartNIC" && not(Attributes.projectTag == "Component.SmartNIC")
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Your project is lacking Component.SmartNIC tag to provision a VM with SmartNIC"
+                            }
+                        }
+                    }
+
+                    rule addStorage {
+                        deny
+                        condition Attributes.resourceComponent == "Storage" && not(Attributes.projectTag == "Component.Storage")
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Your project is lacking Component.Storage tag to provision a VM with attached storage"
+                            }
+                        }
+                    }
+
+                    rule addFPGA {
+                        deny
+                        condition Attributes.resourceComponent == "FPGA" && not(Attributes.projectTag == "Component.FPGA")
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Your project is lacking Component.FPGA tag to provision a VM with FPGA"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

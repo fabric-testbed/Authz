@@ -1,0 +1,45 @@
+namespace Attributes {
+    import System.*
+
+    attribute message {
+        id = "urn:oasis:names:tc:xacml:1.0:subject:message"
+        type = string
+        category = subjectCat
+    }
+
+    attribute resourceType {
+        id = "urn:fabric:xacml:attributes:resource-type"
+        type = string
+        category = resourceCat
+    }
+
+    attribute projectTag {
+        id = "urn:fabric:xacml:attributes:project-tag"
+        type = string
+        category = subjectCat
+    }
+
+    attribute resourceVMCPUs {
+        id = "urn:fabric:xacml:attributes:resource-vmcpus"
+        type = integer
+        category = resourceCat
+    }
+
+    attribute resourceVMRAM {
+        id = "urn:fabric:xacml:attributes:resource-vmram"
+        type = integer
+        category = resourceCat
+    }
+
+    attribute resourceVMDisk {
+        id = "urn:fabric:xacml:attributes:resource-vmdisk"
+        type = integer
+        category = resourceCat
+    }
+
+    attribute resourceComponent {
+        id = "urn:fabric:xacml:attribute:resource-component"
+        type = string
+        category = resourceCat
+    }
+}
