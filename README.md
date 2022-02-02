@@ -156,7 +156,7 @@ Policies and associated example requests are defined in the [policies](policies)
 Policies used in production (on Orchestrator, AMs and Broker) are specified in ALFA and utilize [VS Code ALFA extension](https://marketplace.visualstudio.com/items?itemName=Axiomatics.alfa) to compile ALFA to XACML. This is the recommended way for creating
 and updating FABRIC PDP policies. You must install [VS Code](https://code.visualstudio.com/) and then add the extension to it from Marketplace. 
 
-- [ALFA Policies](alfa)
+- [ALFA Policies](policies/alfa)
 
 Within this folder compiled policies can be found in [src-gen](src-gen) folder (the plugin automatically deposits them there). Common attribute
 definitions are located in [fabric-attributes.alfa](alfa/fabric-attributes.alfa).
