@@ -76,13 +76,7 @@
             "IncludeInResult":false,
             "AttributeId":"urn:fabric:xacml:attributes:project-tag",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
-            "Value":["Slice.NoLimitLifetime", "VM.NoLimit", "Component.GPU", "Component.FPGA"]
-          },
-          {
-            "IncludeInResult":false,
-            "AttributeId":"urn:oasis:names:tc:xacml:1.0:environment:current-dateTime",
-            "DataType":"http://www.w3.org/2001/XMLSchema#dateTime",
-            "Value": ["2022-01-01T10:20:15"]
+            "Value":["VM.NoLimit", "Component.GPU", "Component.FPGA"]
           }
         ]
       }

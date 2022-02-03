@@ -209,7 +209,7 @@ namespace fabricTags {
                 clause Attributes.actionId == "modify"
             apply permitUnlessDeny
 
-            policy modifyByCreator {
+            policy modifyBy = "urn:fabric:authz:xacml:orchestrator:tags:modify:by" {
                 target clause Attributes.resourceType == "sliver"
                 // we need an explicit permit, or else deny (even if attribute is missing)
                 apply denyUnlessPermit
@@ -236,7 +236,7 @@ namespace fabricTags {
                 clause Attributes.actionId == "delete"
             apply permitUnlessDeny
 
-            policy deleteByCreator {
+            policy deleteBy = "urn:fabric:authz:xacml:orchestrator:tags:delete:by" {
                 target clause Attributes.resourceType == "sliver"
                 // we need an explicit permit, or else deny (even if attribute is missing)
                 apply denyUnlessPermit
@@ -259,7 +259,7 @@ namespace fabricTags {
             clause Attributes.actionId == "extend"
             apply permitUnlessDeny
 
-            policy extendByCreator = "urn:fabric:authz:xacml:orchestrator:tags:extend:creator" {
+            policy extendBy = "urn:fabric:authz:xacml:orchestrator:tags:extend:by" {
                 target clause Attributes.resourceType == "sliver"
                 // we need an explicit permit, or else deny (even if attribute is missing)
                 apply denyUnlessPermit
