@@ -97,7 +97,8 @@ Using CI Logon many of the EduCause attributes should be available.
 | Attribute | Values or Type | Notes |
 | --- | --- | --- |
 | resource-type | project, slice, sliver | Top level resource type for authorization |
-| resource-creator | String |  |
+| resource-subject | String |  |
+| resource-site | String |  | 
 | resource-vmcpus     | Integer | CPUs in a VM |
 | resource-vmram    | Integer | RAM size in GB |
 | resource-vmdisk | Integer | Embedded disk size in GB |
@@ -108,7 +109,6 @@ Using CI Logon many of the EduCause attributes should be available.
 | Attribute | Values or Type | Notes |
 | --- | --- | --- | 
 | action-id | String | 
-| action-principal | String | 
 
 ### Project Attributes/Tags
 
@@ -126,9 +126,10 @@ The following is an incomplete list of possible project tag values:
 - Component.SmartNIC - allows to provision 25G and 100G dedicated SmartNICs
 - Component.Storage - allows to create and attach rotating storage
 - Net.NoLimitBW - allows to provision links over X Gbps
-- Net.Multisite - allows to create slices spanning multiple sites
 - Net.Peering - allows to create slices with public peering
 - Net.PortMirroring - allows to create slices that include port mirroring
+- Net.StitchPort - allows to create slices with stitch ports
+- Slice.Multisite - allows to create slices spanning multiple sites
 - Slice.Measurement - allows to provision measurement VMs
 - Slice.NoLimitLifetime - allows to create slices with a lifetime beyond default
 limit without the need to renew
@@ -172,7 +173,7 @@ Note that each folder typically contains policies as well as example requests bo
 
 # Testing with Authzforce server
 
-Note1: that as of Java 9, jaxb libraries have been removed from standard JDK distributions and thus will not work according to instructions here (which only apply to Java8) - appropriate jars must be added to classpath externally. When in doubt use the pre-packaged [PDP Docker Images](https://github.com/fabric-testbed/fabric-docker-images/tree/master/authzforce-pdp) which include command tools in addition to the RESTful PDP server.
+Note1: As of Java 9, jaxb libraries have been removed from standard JDK distributions and thus will not work according to instructions here (which only apply to Java8) - appropriate jars must be added to classpath externally. When in doubt use the pre-packaged [PDP Docker Images](https://github.com/fabric-testbed/fabric-docker-images/tree/master/authzforce-pdp) which include command tools in addition to the RESTful PDP server.
 
 Note2: OpenJDK 11 and up does not have the problem described in Note1. Newer version of AuthzForce (17+) work with OpenJDK11
 
@@ -181,11 +182,11 @@ Note2: OpenJDK 11 and up does not have the problem described in Note1. Newer ver
 1. Modify pdp.xml to (a) point to the policy XML file you are testing and (b) make sure `rootPolicyRef` element URN matches that of the `PolicySetId` at the top of your policy
 1. Execute as follows and observe the result:
 ```
-$ ./authzforce-ce-core-pdp-cli-14.0.1.jar -p pdp.xml <request path>/requestfile.xml
+$ ./authzforce-ce-core-pdp-cli-X.Y.Z.jar -p pdp.xml <request path>/requestfile.xml
 ```
 1. To try JSON instead of XML the following command should produce the result:
 ```
-$ ./authzforce-ce-core-pdp-cli-14.0.0.jar -p -t XACML_JSON pdp.xml <request path>/requestfile.json
+$ ./authzforce-ce-core-pdp-cli-X.Y.Z.jar -p -t XACML_JSON pdp.xml <request path>/requestfile.json
 ```
 
 If you have a PDP RESTful server running in a [Docker container](https://github.com/fabric-testbed/fabric-docker-images/tree/master/authzforce-pdp) you can issue curl requests as follows to test:

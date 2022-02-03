@@ -13,10 +13,22 @@ namespace Attributes {
         category = resourceCat
     }
 
+    attribute resourceSubject {
+        id = "urn:fabric:xacml:attributes:resource-subject"
+        type = string
+        category = resourceCat
+    }
+
+    attribute resourceProject {
+        id = "urn:fabric:xacml:attributes:resource-project"
+        type = string
+        category = resourceCat
+    }
+
     attribute projectTag {
         id = "urn:fabric:xacml:attributes:project-tag"
         type = string
-        category = subjectCat
+        category = environmentCat
     }
 
     attribute resourceVMCPUs {
@@ -40,6 +52,48 @@ namespace Attributes {
     attribute resourceComponent {
         id = "urn:fabric:xacml:attribute:resource-component"
         type = string
+        category = resourceCat
+    }
+
+    attribute resourcePeerSite {
+        id = "urn:fabric:xacml:attribute:resource-peersite"
+        type = string
+        category = resourceCat
+    }
+
+    attribute resourceStitchPort {
+        id = "urn:fabric:xacml:attribute:resource-stitchport"
+        type = string
+        category = resourceCat
+    }
+
+    attribute resourceSite {
+        id = "urn:fabric:xacml:attribute:resource-site"
+        type = string
+        category = resourceCat
+    }
+
+    attribute resourceLinkBW {
+        id = "urn:fabric:xacml:attribute:resource-link-bw"
+        type = integer
+        category = resourceCat
+    }
+
+    attribute resourceWithMeasurements {
+        id = "urn:fabric:xacml:attribute:resource-with-measurements"
+        type = boolean
+        category = resourceCat
+    }
+
+    attribute subjectProjects {
+        id = "urn:fabrc:xacml:attributes:subject-projects"
+        type = string
+        category = subjectCat
+    }
+
+    attribute resourceLifetime {
+        id = "urn:fabric:xacml:attributes:resource-lifetime"
+        type = dayTimeDuration
         category = resourceCat
     }
 }
