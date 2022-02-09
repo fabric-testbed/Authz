@@ -13,10 +13,10 @@ YESPDP = 'pdp-yes.xml'
 # make sure the CLI executable and appropriate Java version are available
 AUTHZFORCECLI = '../authzforce/authzforce-ce-core-pdp-cli-17.1.2.jar'
 PERMIT_REQUESTS = [ 
-    '../policies/alfa/FabricOrchestratorProjectTags/orchestrator-request-simplest.json',
-    '../policies/alfa/FabricOrchestratorProjectTags/orchestrator-request-simple.json',
-    '../policies/alfa/FabricOrchestratorProjectTags/orchestrator-request-duration.json',
-    '../policies/alfa/FabricOrchestratorProjectTags/orchestrator-request.json'
+    '../policies/alfa/Requests/orchestrator-request-simplest.json',
+    '../policies/alfa/Requests/orchestrator-request-simple.json',
+    '../policies/alfa/Requests/orchestrator-request-duration.json',
+    '../policies/alfa/Requests/orchestrator-request.json'
 ]
 
 def makePDPFile(policyFile, policyID, pdpFile):
