@@ -7,3 +7,4 @@ This is the home for ALFA-generated policies. It contains
     - [Test policies](TestPolicies)
     - [Simple always 'yes'](FabricAlwaysYes)
     - [Project-tag based Orchestrator policy](FabricOrchestratorProjectTags)
+- Common requests are located in [Requests](Requests)
