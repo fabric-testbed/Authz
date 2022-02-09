@@ -70,7 +70,7 @@
             "IncludeInResult":false,
             "AttributeId":"urn:fabric:xacml:attributes:project-tag",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
-            "Value":["Component.FPGA", "Component.GPU", "VM.NoLimitDisk", "Slice.Multisite", "Net.StitchPort", "Net.Peering", "Net.NoLimitBW", "Slice.Measurements"]
+            "Value":["VM.NoLimit", "Component.FPGA", "Component.GPU"]
           }
         ]
       }

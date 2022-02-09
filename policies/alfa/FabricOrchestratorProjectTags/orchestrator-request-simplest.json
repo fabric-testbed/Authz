@@ -13,7 +13,7 @@
             "IncludeInResult":false,
             "AttributeId":"urn:fabric:xacml:attributes:resource-vmcpus",
             "DataType":"http://www.w3.org/2001/XMLSchema#integer",
-            "Value": [1, 2, 2, 2, 2]
+            "Value": [1, 2, 2, 2, 5]
           },
           {
             "IncludeInResult":false,
@@ -48,6 +48,17 @@
             "AttributeId":"urn:oasis:names:tc:xacml:1.0:subject:subject-id",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
             "Value":["ibaldin@renci.org"]
+          }
+        ]
+      },
+      {
+        "CategoryId":"urn:oasis:names:tc:xacml:3.0:attribute-category:environment",
+        "Attribute":[
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:project-tag",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value":["VM.NoLimitCPU"]
           }
         ]
       }

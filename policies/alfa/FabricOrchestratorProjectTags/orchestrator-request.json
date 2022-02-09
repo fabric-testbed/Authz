@@ -31,7 +31,7 @@
             "IncludeInResult":false,
             "AttributeId":"urn:fabric:xacml:attribute:resource-component",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
-            "Value": ["GPU", "FPGA"]
+            "Value": ["GPU", "FPGA", "SharedNIC"]
           },
           {
             "IncludeInResult":false,
@@ -41,9 +41,9 @@
           },
           {
             "IncludeInResult":false,
-            "AttributeId": "urn:fabric:xacml:attribute:resource-stitchport",
+            "AttributeId": "urn:fabric:xacml:attribute:resource-stitchsite",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
-            "Value": ["RENC"]
+            "Value": ["RENC", "UKY"]
           },
           {
             "IncludeInResult":false,
@@ -85,6 +85,12 @@
             "AttributeId":"urn:oasis:names:tc:xacml:1.0:action:action-id",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
             "Value":["create"]
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:resource-lifetime",
+            "DataType":"http://www.w3.org/2001/XMLSchema#dayTimeDuration",
+            "Value": ["P10D"]
           }
         ]
       },
@@ -112,7 +118,7 @@
             "IncludeInResult":false,
             "AttributeId":"urn:fabric:xacml:attributes:project-tag",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
-            "Value":["Component.FPGA", "Component.GPU", "VM.NoLimitDisk", "Slice.Multisite", "Net.StitchPort", "Net.Peering", "Net.NoLimitBW", "Slice.Measurements"]
+            "Value":["Component.FPGA", "Component.GPU", "VM.NoLimitDisk", "Slice.Multisite", "Net.Peering", "Net.NoLimitBW", "Net.StitchPort.UKY", "Net.StitchPort.RENC", "Slice.Measurements"]
           }
         ]
       }

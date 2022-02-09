@@ -125,12 +125,14 @@ The following is an incomplete list of possible project tag values:
 - Component.FPGA - allows to provision slivers with FPGAs
 - Component.SmartNIC - allows to provision 25G and 100G dedicated SmartNICs
 - Component.Storage - allows to create and attach rotating storage
+- Component.NVME - allows to create and attach NVME drives
 - Net.NoLimitBW - allows to provision links over X Gbps
 - Net.Peering - allows to create slices with public peering
 - Net.PortMirroring - allows to create slices that include port mirroring
-- Net.StitchPort - allows to create slices with stitch ports
+- Net.StitchPort.XXX - allows to create slices with stitch port with short name XXX
+- Net.AllStitchPorts - allows to create slices with any stitchport
 - Slice.Multisite - allows to create slices spanning multiple sites
-- Slice.Measurement - allows to provision measurement VMs
+- Slice.Measurements - allows to provision measurement VMs
 - Slice.NoLimitLifetime - allows to create slices with a lifetime beyond default
 limit without the need to renew
 

@@ -61,8 +61,8 @@ namespace Attributes {
         category = resourceCat
     }
 
-    attribute resourceStitchPort {
-        id = "urn:fabric:xacml:attribute:resource-stitchport"
+    attribute resourceStitchSite {
+        id = "urn:fabric:xacml:attribute:resource-stitchsite"
         type = string
         category = resourceCat
     }
@@ -94,6 +94,6 @@ namespace Attributes {
     attribute resourceLifetime {
         id = "urn:fabric:xacml:attributes:resource-lifetime"
         type = dayTimeDuration
-        category = resourceCat
+        category = actionCat
     }
 }

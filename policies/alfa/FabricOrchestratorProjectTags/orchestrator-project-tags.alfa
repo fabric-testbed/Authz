@@ -4,21 +4,22 @@ namespace fabricTags {
     policyset OrchestratorTags = "urn:fabric:authz:xacml:orchestrator:tags" {
         apply denyUnlessPermit
 
-        // applies to create operations - looks at sizes, components and project tags
+        //
+        // applies to create operations - looks at sizes, components, network features,
+        // and project tags
+        //
         policyset Create = "urn:fabric:authz:xacml:orchestrator:tags:create" {
             target
                 clause Attributes.actionId == "create"
             apply permitUnlessDeny
 
-            //
-            // Each of the following policies for each resource type must explicitly say 'permit'
-            // or else the policy fails
+            // Each of the following policies must explicitly say 'permit' or else the policy fails
             policyset createVM = "urn:fabric:authz:xacml:orchestrator:tags:create:vm" {
                 target clause Attributes.resourceType == "sliver"
                 apply denyUnlessPermit
 
                 // deal with creation of VMs 
-                policy createVMSize = "urn:fabric:authz:xacml:orchestrator:tags:create:vmsize" {
+                policy createVMSize = "urn:fabric:authz:xacml:orchestrator:tags:create:vm:sized" {
                     target clause Attributes.resourceType == "sliver"
                     // we have precise deny rules, we permit otherwise
                     apply permitUnlessDeny
@@ -54,8 +55,9 @@ namespace fabricTags {
 
                 // deal with creation of VMs with no limits. Because we are ORing the same attributes as
                 // above we have to make this a separate policy
-                policy createVMAnySize = "urn:fabric:authz:xacml:orchestrator:tags:create:vmany" {
+                policy createVMAnySize = "urn:fabric:authz:xacml:orchestrator:tags:create:vm:any" {
                     target clause Attributes.resourceType == "sliver"
+                    // precise deny, permit otherwise
                     apply permitUnlessDeny
 
                     // this doesn't have on deny message on purpose - everything is said above if needed
@@ -72,8 +74,9 @@ namespace fabricTags {
                 target clause Attributes.resourceType == "sliver"
                 apply denyUnlessPermit
 
-                policy withComponent = "urn:fabric:authz:xacml:orchestrator:tags:create:addcomponent"  {
+                policy withComponent = "urn:fabric:authz:xacml:orchestrator:tags:create:component:with"  {
                     target clause Attributes.resourceType == "sliver"
+                    // precise deny, permit otherwise
                     apply permitUnlessDeny
 
                     rule withGPU {
@@ -115,16 +118,27 @@ namespace fabricTags {
                             }
                         }
                     }
+
+                    rule withNVME {
+                        deny
+                        condition Attributes.resourceComponent == "NVME" && not(Attributes.projectTag == "Component.NVME")
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Policy Violation: Your project is lacking Component.NVME tag to provision a VM with NVME."
+                            }
+                        }
+                    }
                 }
             }
 
             // this is for network 
-            policyset network = "urn:fabric:authz:xacml:orchestrator:tags:create:network" {
+            policyset net = "urn:fabric:authz:xacml:orchestrator:tags:create:net" {
                 target clause Attributes.resourceType == "sliver"
                 apply denyUnlessPermit
 
-                policy netFeatures = "urn:fabric:authz:xacml:orchestrator:tags:create:network:peering" {
+                policy netFeatures = "urn:fabric:authz:xacml:orchestrator:tags:create:net:features" {
                     target clause Attributes.resourceType == "sliver"
+                    // precise deny permit otherwise
                     apply permitUnlessDeny
 
                     rule withPeering {
@@ -133,16 +147,6 @@ namespace fabricTags {
                         on deny {
                             advice reasonToDeny {
                                 Attributes.message = "Policy Violation: Your project is lacking Net.Peering tag to request a slice with peering."
-                            }
-                        }
-                    }
-
-                    rule withStitchPorts {
-                        deny
-                        condition stringBagSize(Attributes.resourceStitchPort) > 0 && not(Attributes.projectTag == "Net.StitchPort")
-                        on deny {
-                            advice reasonToDeny {
-                                Attributes.message = "Policy Violation: Your project is lacking Net.StitchPort tag to request a slice with stitch ports."
                             }
                         }
                     }
@@ -166,6 +170,15 @@ namespace fabricTags {
                             }
                         }
                     }
+                    rule withStitchPorts {
+                        deny 
+                        condition stringBagSize(Attributes.resourceStitchSite) > 0 && not(map(function[stringConcatenate], "Net.StitchPort.", Attributes.resourceStitchSite) == Attributes.projectTag)
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Policy Violation: Your project is lacking Net.StitchPort.XXX tag to request a slice with stitch ports to sites."
+                            }
+                        }
+                    }
                 }
             }
 
@@ -176,8 +189,10 @@ namespace fabricTags {
 
                 policy miscFeatures = "urn:fabric:authz:xacml:orchestrator:tags:create:misc:features" {
                     target clause Attributes.resourceType == "sliver"
+                    // precise deny, permit otherwise
                     apply permitUnlessDeny
 
+                    // can create slice with measurement VMs
                     rule withMeasurements {
                         deny
                         condition booleanOneAndOnly(Attributes.resourceWithMeasurements) == true && not(Attributes.projectTag == "Slice.Measurements")
@@ -191,7 +206,7 @@ namespace fabricTags {
                     // check that requested created lifetime doesn't exceed two weeks
                     rule longlived {
                         deny
-                        condition dateTimeAddDayTimeDuration(dateTimeOneAndOnly(Attributes.currentDateTime), dayTimeDurationFromString("P14D")) < 
+                        condition dateTimeAddDayTimeDuration(dateTimeOneAndOnly(Attributes.currentDateTime), dayTimeDurationFromString("P14D")) <
                             dateTimeAddDayTimeDuration(dateTimeOneAndOnly(Attributes.currentDateTime), dayTimeDurationOneAndOnly(Attributes.resourceLifetime)) &&
                             not(Attributes.projectTag == "Slice.NoLimitLifetime")
                         on deny {
@@ -204,6 +219,9 @@ namespace fabricTags {
             }
         }
 
+        //
+        // Authorizing modify operations 
+        //
         policyset Modify = "urn:fabric:authz:xacml:orchestrator:tags:modify" {
             target
                 clause Attributes.actionId == "modify"
@@ -211,7 +229,7 @@ namespace fabricTags {
 
             policy modifyBy = "urn:fabric:authz:xacml:orchestrator:tags:modify:by" {
                 target clause Attributes.resourceType == "sliver"
-                // we need an explicit permit, or else deny (even if attribute is missing)
+                // here we need an explicit permit, or else deny (even if attribute is missing)
                 apply denyUnlessPermit
                 on deny {
                     advice reasonToDeny {
@@ -231,6 +249,9 @@ namespace fabricTags {
             }
         }
 
+        //
+        // Authorizing delete operations
+        //
         policyset Delete = "urn:fabric:authz:xacml:orchestrator:tags:delete" {
             target
                 clause Attributes.actionId == "delete"
@@ -238,7 +259,7 @@ namespace fabricTags {
 
             policy deleteBy = "urn:fabric:authz:xacml:orchestrator:tags:delete:by" {
                 target clause Attributes.resourceType == "sliver"
-                // we need an explicit permit, or else deny (even if attribute is missing)
+                // here we need an explicit permit, or else deny (even if attribute is missing)
                 apply denyUnlessPermit
                 on deny {
                     advice reasonToDeny {
@@ -249,11 +270,13 @@ namespace fabricTags {
                 rule {
                     permit
                     condition Attributes.subjectId[mustbepresent] == Attributes.resourceSubject[mustbepresent]
-
                 }
             }
         }
 
+        //
+        // Authorizing Extend operations
+        //
         policyset Extend = "urn:fabric:authz:xacml:orchestrator:tags:extend" {
             target
             clause Attributes.actionId == "extend"
@@ -261,7 +284,7 @@ namespace fabricTags {
 
             policy extendBy = "urn:fabric:authz:xacml:orchestrator:tags:extend:by" {
                 target clause Attributes.resourceType == "sliver"
-                // we need an explicit permit, or else deny (even if attribute is missing)
+                // here we need an explicit permit, or else deny (even if attribute is missing)
                 apply denyUnlessPermit
                 on deny {
                     advice reasonToDeny {
