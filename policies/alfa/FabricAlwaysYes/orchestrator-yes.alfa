@@ -4,7 +4,22 @@ namespace fabricYes {
     policyset OrchestratorYesPolicy = "urn:fabric:authz:xacml:orchestrator:ps" {
         apply firstApplicable
 
-        policyset queryPolicy = "urn:fabric:authz:xacml:orchestrator:p:query" {
+        policyset createPolicySet = "urn:fabric:authz:xacml:orchestrator:ps:create" {
+            target clause Attributes.actionId == "create"
+            apply denyUnlessPermit
+
+            policy createPolicy = "urn:fabric:authz:xacml:orchestrator:p:create" {
+                target clause Attributes.actionId == "create"
+                apply denyUnlessPermit
+
+                // always say 'yes'
+                rule {
+                    permit
+                }
+            }
+        }
+
+        policyset queryPolicy = "urn:fabric:authz:xacml:orchestrator:ps:query" {
             target clause Attributes.actionId == "query"
             apply denyUnlessPermit
             
@@ -16,11 +31,6 @@ namespace fabricYes {
                 // permit rule for everyone
                 rule {
                     permit
-                    on deny {
-                        advice reasonToDeny {
-                            Attributes.message = "You can't do this thing"
-                        }
-                    }
                 }
             }
 
@@ -30,11 +40,6 @@ namespace fabricYes {
 
                 rule {
                     permit
-                    on deny {
-                        advice reasonToDeny {
-                            Attributes.message = "You can't do this thing "
-                        }
-                    }
                 }
             }
         }

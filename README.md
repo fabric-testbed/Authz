@@ -44,16 +44,14 @@ Projects are bound to specific facilities at the time of creation, thus effectiv
 | 15. Facility Operator is also a Project Member for any project (can create/delete slices and slivers) subject to project resource constraints. | XACML PDPs |
 | 16. Resource type/project tag based policies | XACML PDPs |
 
-Much of the project management policies above are embedded in the [ProjectRegistry](https://github.com/fabric-testbed/project-registry) and CI Logon logic.
+Rules 1-9 of the project management policies above are embedded in the [ProjectRegistry](https://github.com/fabric-testbed/project-registry) procedural code and CI Logon logic. The remaining rules are federation-level and are implemented using XACML PDPs.
 
 # Resource provisioning authorizations using ABAC
 
 For the purposes of this document a FABRIC deployment consists of multiple sites presenting different remote API services focused on provisioning of resources and measurements. Different sites (aggregates) may use different policies with respect to user permissions (provider autonomy). In addition to resources in multiple sites and measurements, permissions must also be managed on various actions within the FABRIC portal. The goal of this document is to define a set of  policies so they can be implemented in XACML and other mechanisms.
 
-Much of the resource authorization is done inside Orchestrator, Broker and Aggregate Managers and is based on the types of resources and components included in
-the slices and the `tags` associated with the project under which the slice with these slivers is being created. Other attributes of consideration can be the
-dimensions/sizes of the slivers and the duration for which slivers are being created. Operations related to modifying existing resources require information about
-the identity of the user invoking the modify operation as well as the user who originally created the resource that is being modified.
+Much of the resource authorization is done inside Orchestrator, Broker and Aggregate Managers and is based on the types of resources and components included in the slices and the `tags` associated with the project under which the slice with these slivers is being created. Other attributes of consideration can be the
+dimensions/sizes of the slivers and the duration for which slivers are being created. Operations related to modifying existing resources require information about the identity of the user invoking the modify operation as well as the user who originally created the resource that is being modified.
 
 Tags are added to a project by Facility Operators based on requests from the Project Owners. The full discussion of how project attributes are communicated to the PDP is outside the scope of this document, however briefly:
 - One or more attributes or tags are added to a project within a Project registry by Facility Operator
@@ -65,7 +63,7 @@ Tags are added to a project by Facility Operators based on requests from the Pro
 There are different types of sliver resource constraints that are expressed via policies. Sliver constraints are by resource type, size and count (i.e. ‘Alice cannot hold more than 3 large apples, 2 small apples and 5 pears at a time’). 
 - Constraints can be applied at different scopes (i.e. federation-level and aggregate-level).
 - Constraints can be imposed on individual principals (based on their specific identity, their home institution, or their group within an institution, as asserted by the institutional IdP, i.e. student, faculty or staff).
-- Constraints can be imposed on individual projects (a more common scenario) based on project name
+- Constraints can be imposed on individual projects (a more common scenario) based on project tags.
 
 Additional constraints for resource provisioning policies can come from
 - Calendar time or date (i.e. for a specific aggregate ‘during exam week only make resources available only to users from home institution’)
@@ -133,13 +131,12 @@ The following is an incomplete list of possible project tag values:
 - Net.AllStitchPorts - allows to create slices with any stitchport
 - Slice.Multisite - allows to create slices spanning multiple sites
 - Slice.Measurements - allows to provision measurement VMs
-- Slice.NoLimitLifetime - allows to create slices with a lifetime beyond default
-limit without the need to renew
+- Slice.NoLimitLifetime - allows to create slices with a lifetime beyond default limit X time units without the need to renew
 
 
-### Actions and Action Attributes
+### Actions, Scopes and Action Attributes
 
-| Action | Subject resource type | Additional attributes |
+| Action | Scope | Additional attributes |
 | --- | --- | --- |
 | createProject | project  |   |
 | deleteProject | project  |   |
@@ -154,7 +151,7 @@ limit without the need to renew
 
 # Available Policy Implementations/Defining new policies
 
-Policies and associated example requests are defined in the [policies](policies) subdirectory.
+FABRIC policies and associated example requests are defined in the [policies](policies) subdirectory.
 
 Policies used in production (on Orchestrator, AMs and Broker) are specified in ALFA and utilize [VS Code ALFA extension](https://marketplace.visualstudio.com/items?itemName=Axiomatics.alfa) to compile ALFA to XACML. This is the recommended way for creating
 and updating FABRIC PDP policies. You must install [VS Code](https://code.visualstudio.com/) and then add the extension to it from Marketplace. 
