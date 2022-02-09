@@ -179,6 +179,8 @@ Note1: As of Java 9, jaxb libraries have been removed from standard JDK distribu
 
 Note2: OpenJDK 11 and up does not have the problem described in Note1. Newer version of AuthzForce (17+) work with OpenJDK11
 
+## Testing manually
+
 1. Download the latest [authzforce-ce-core-pdp-cli-X.Y.Z](https://github.com/authzforce/core) and follow instructions
 1. Download the latest [configuration and example policy folder](https://github.com/authzforce/core/tree/develop/pdp-cli/src/test/resources/conformance/xacml-3.0-core/mandatory)
 1. Modify pdp.xml to (a) point to the policy XML file you are testing and (b) make sure `rootPolicyRef` element URN matches that of the `PolicySetId` at the top of your policy
@@ -201,6 +203,15 @@ $ curl --include --header "Content-Type: application/xacml+xml" --data @policies
 curl --include --header "Content-Type: application/xacml+json" --data @policies/orchestrator-request.json http://localhost:8080/services/pdp
 ```
 (The above example assumes the use of [orchestrator-yes.xml policy](by-actor/SimpleYes/orchestrator-yes.xml), the same directory contains example requests both in XML and JSON).
+
+## Using a test harness
+
+Make sure that `./authzforce-ce-core-pdp-cli-X.Y.Z.jar ` is present under `authzforce/` directory. Update `test/test-harness.py` appropriately, then run:
+```
+$ cd test/
+$ pytest test-harness.py
+```
+This will run all available requests for available policies.
 
 # Useful references
 
