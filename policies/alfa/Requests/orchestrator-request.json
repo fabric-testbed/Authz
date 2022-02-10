@@ -41,7 +41,7 @@
           },
           {
             "IncludeInResult":false,
-            "AttributeId": "urn:fabric:xacml:attribute:resource-stitchsite",
+            "AttributeId": "urn:fabric:xacml:attribute:resource-stitch-port",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
             "Value": ["RENC", "UKY"]
           },
@@ -105,15 +105,10 @@
           },
           {
             "IncludeInResult":false,
-            "AttributeId":"urn:fabrc:xacml:attributes:subject-projects",
+            "AttributeId":"urn:fabric:xacml:attributes:subject-project",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
             "Value":["FABRIC"]
-          }
-        ]
-      },
-      {
-        "CategoryId":"urn:oasis:names:tc:xacml:3.0:attribute-category:environment",
-        "Attribute":[
+          },
           {
             "IncludeInResult":false,
             "AttributeId":"urn:fabric:xacml:attributes:project-tag",

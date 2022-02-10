@@ -172,7 +172,7 @@ namespace fabricTags {
                     }
                     rule withStitchPorts {
                         deny 
-                        condition stringBagSize(Attributes.resourceStitchSite) > 0 && not(map(function[stringConcatenate], "Net.StitchPort.", Attributes.resourceStitchSite) == Attributes.projectTag)
+                        condition stringBagSize(Attributes.resourceStitchPort) > 0 && not(map(function[stringConcatenate], "Net.StitchPort.", Attributes.resourceStitchPort) == Attributes.projectTag)
                         on deny {
                             advice reasonToDeny {
                                 Attributes.message = "Policy Violation: Your project is lacking Net.StitchPort.XXX tag to request a slice with stitch ports to sites."
@@ -244,7 +244,7 @@ namespace fabricTags {
 
                 rule {
                     permit
-                    condition Attributes.subjectProjects[mustbepresent] == Attributes.resourceProject[mustbepresent]
+                    condition Attributes.subjectProject[mustbepresent] == Attributes.resourceProject[mustbepresent]
                 }
             }
         }
@@ -299,7 +299,7 @@ namespace fabricTags {
 
                 rule {
                     permit
-                    condition Attributes.subjectProjects[mustbepresent] == Attributes.resourceProject[mustbepresent]
+                    condition Attributes.subjectProject[mustbepresent] == Attributes.resourceProject[mustbepresent]
                 }
             }
 

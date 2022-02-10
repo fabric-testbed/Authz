@@ -149,6 +149,57 @@ The following is an incomplete list of possible project tag values:
 | modify   | slice, sliver  |   |
 | renew    | slice, sliver  |   |
 
+### Common FABRIC Request Structure
+
+FABRIC policies require many different attributes to make decisions. This document provides up-to-date list of attributes required across all policies (Orchestrator, AM or others).
+
+Some of the attributes are standard XACML attributes, some are specific to FABRIC. 
+
+#### Resource Attributes
+
+Category ID: urn:oasis:names:tc:xacml:3.0:attribute-category:resource
+
+| Attribute ID | Attribute Values | Attribute Description | 
+| --- | --- | --- |
+| urn:fabric:xacml:attributes:resource-type | "slice", "sliver", "project" | |
+| urn:fabric:xacml:attributes:resource-vmcpus | Integer | Number of CPU cores in VM |
+| urn:fabric:xacml:attributes:resource-vmram | Integer | Gygabytes of RAM in VM |
+| urn:fabric:xacml:attributes:resource-vmdisk | Integer | Gygabytes of Disk in VM |
+| urn:fabric:xacml:attribute:resource-component | "FPGA", "SmartNIC", "SharedNIC", "GPU" | |
+| urn:fabric:xacml:attribute:resource-site | String | Site acronym |
+| urn:fabric:xacml:attribute:resource-stitch-port | String | Name of stitch port |
+| urn:fabric:xacml:attribute:resource-peersite | String | Name of peer site |
+| urn:fabric:xacml:attribute:resource-link-bw | Integer | Bandwidth in Gbps |
+| urn:fabric:xacml:attribute:resource-with-measurements | Boolean | Whether measurement resources are being requested |
+| urn:fabric:xacml:attributes:resource-subject | String | User unique identifer like EPPN |
+| urn:fabric:xacml:attributes:resource-project | String | Project unique identifier like GUID |
+
+#### Action Attributes
+
+Category ID: urn:oasis:names:tc:xacml:3.0:attribute-category:action
+
+| Attribute ID | Attribute Values | Attribute Description | 
+| --- | --- | --- |
+| urn:oasis:names:tc:xacml:1.0:action:action-id | "create", "delete", "modify" | |
+| urn:fabric:xacml:attributes:resource-lifetime | TimeDuration | Sliver or slice lifetime request |
+
+#### Access Subject Attributes
+
+Category ID: urn:oasis:names:tc:xacml:1.0:subject-category:access-subject
+
+| Attribute ID | Attribute Values | Attribute Description | 
+| --- | --- | --- |
+| urn:oasis:names:tc:xacml:1.0:subject:subject-id | String | User unique identifier like EPPN, must be same type as resource-subject |
+| urn:fabric:xacml:attributes:subject-project | String | Project unique identifier like GUID |
+| urn:fabric:xacml:attributes:project-tag | String | Permission tags associated with the project (see [README.md](../../../README.md))
+
+#### Environment Attributes 
+
+Category ID: urn:oasis:names:tc:xacml:3.0:attribute-category:environment
+
+| Attribute ID | Attribute Values | Attribute Description | 
+| --- | --- | --- |
+
 # Available Policy Implementations/Defining new policies
 
 FABRIC policies and associated example requests are defined in the [policies](policies) subdirectory.

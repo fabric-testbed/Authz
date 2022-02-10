@@ -28,7 +28,7 @@ namespace Attributes {
     attribute projectTag {
         id = "urn:fabric:xacml:attributes:project-tag"
         type = string
-        category = environmentCat
+        category = subjectCat
     }
 
     attribute resourceVMCPUs {
@@ -61,8 +61,8 @@ namespace Attributes {
         category = resourceCat
     }
 
-    attribute resourceStitchSite {
-        id = "urn:fabric:xacml:attribute:resource-stitchsite"
+    attribute resourceStitchPort {
+        id = "urn:fabric:xacml:attribute:resource-stitch-port"
         type = string
         category = resourceCat
     }
@@ -85,8 +85,8 @@ namespace Attributes {
         category = resourceCat
     }
 
-    attribute subjectProjects {
-        id = "urn:fabrc:xacml:attributes:subject-projects"
+    attribute subjectProject {
+        id = "urn:fabric:xacml:attributes:subject-project"
         type = string
         category = subjectCat
     }

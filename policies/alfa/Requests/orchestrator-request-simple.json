@@ -60,12 +60,7 @@
             "AttributeId":"urn:fabrc:xacml:attributes:subject-projects",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
             "Value":["FABRIC"]
-          }
-        ]
-      },
-      {
-        "CategoryId":"urn:oasis:names:tc:xacml:3.0:attribute-category:environment",
-        "Attribute":[
+          },
           {
             "IncludeInResult":false,
             "AttributeId":"urn:fabric:xacml:attributes:project-tag",
