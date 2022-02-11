@@ -1,0 +1,122 @@
+{"Request":{"ReturnPolicyIdList":false,"CombinedDecision":false,
+    "Category":[
+      {
+        "CategoryId":"urn:oasis:names:tc:xacml:3.0:attribute-category:resource",
+        "Attribute":[
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:resource-type",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value": []
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:resource-vmcpus",
+            "DataType":"http://www.w3.org/2001/XMLSchema#integer",
+            "Value": []
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:resource-vmram",
+            "DataType":"http://www.w3.org/2001/XMLSchema#integer",
+            "Value": []
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:resource-vmdisk",
+            "DataType":"http://www.w3.org/2001/XMLSchema#integer",
+            "Value": []
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attribute:resource-component",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value": []
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId": "urn:fabric:xacml:attribute:resource-site",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value": []
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId": "urn:fabric:xacml:attribute:resource-stitch-port",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value": []
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId": "urn:fabric:xacml:attribute:resource-peersite",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value": []
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId": "urn:fabric:xacml:attribute:resource-link-bw",
+            "DataType":"http://www.w3.org/2001/XMLSchema#integer",
+            "Value": []
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId": "urn:fabric:xacml:attribute:resource-with-measurements",
+            "DataType": "http://www.w3.org/2001/XMLSchema#boolean",
+            "Value": []
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId": "urn:fabric:xacml:attributes:resource-subject",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value": []
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId": "urn:fabric:xacml:attributes:resource-project",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value": []
+          }
+        ]
+      },
+      {
+        "CategoryId":"urn:oasis:names:tc:xacml:3.0:attribute-category:action",
+        "Attribute":[
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:oasis:names:tc:xacml:1.0:action:action-id",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value":[]
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:resource-lifetime",
+            "DataType":"http://www.w3.org/2001/XMLSchema#dayTimeDuration",
+            "Value": []
+          }
+        ]
+      },
+      {
+        "CategoryId":"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject",
+        "Attribute":[
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:oasis:names:tc:xacml:1.0:subject:subject-id",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value":[]
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:subject-project",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value":[]
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:project-tag",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value":[]
+          }
+        ]
+      }
+    ]
+  }
+}
