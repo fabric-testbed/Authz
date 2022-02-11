@@ -153,7 +153,7 @@ The following is an incomplete list of possible project tag values:
 
 FABRIC policies require many different attributes to make decisions. This document provides up-to-date list of attributes required across all policies (Orchestrator, AM or others).
 
-Some of the attributes are standard XACML attributes, some are specific to FABRIC. 
+Some of the attributes are standard XACML attributes, some are specific to FABRIC. A JSON [template](policies/alfa/Requests/orchestrator-request-template.json) of a request with all attributes present is available.
 
 #### Resource Attributes
 
