@@ -31,20 +31,20 @@ namespace Attributes {
         category = subjectCat
     }
 
-    attribute resourceVMCPUs {
-        id = "urn:fabric:xacml:attributes:resource-vmcpus"
+    attribute resourceCPU {
+        id = "urn:fabric:xacml:attributes:resource-cpu"
         type = integer
         category = resourceCat
     }
 
-    attribute resourceVMRAM {
-        id = "urn:fabric:xacml:attributes:resource-vmram"
+    attribute resourceRAM {
+        id = "urn:fabric:xacml:attributes:resource-ram"
         type = integer
         category = resourceCat
     }
 
-    attribute resourceVMDisk {
-        id = "urn:fabric:xacml:attributes:resource-vmdisk"
+    attribute resourceDisk {
+        id = "urn:fabric:xacml:attributes:resource-disk"
         type = integer
         category = resourceCat
     }
@@ -61,8 +61,8 @@ namespace Attributes {
         category = resourceCat
     }
 
-    attribute resourceStitchPort {
-        id = "urn:fabric:xacml:attribute:resource-stitch-port"
+    attribute resourceFacilityPort {
+        id = "urn:fabric:xacml:attribute:resource-facility-port"
         type = string
         category = resourceCat
     }
@@ -73,8 +73,8 @@ namespace Attributes {
         category = resourceCat
     }
 
-    attribute resourceLinkBW {
-        id = "urn:fabric:xacml:attribute:resource-link-bw"
+    attribute resourceBW {
+        id = "urn:fabric:xacml:attribute:resource-bw"
         type = integer
         category = resourceCat
     }

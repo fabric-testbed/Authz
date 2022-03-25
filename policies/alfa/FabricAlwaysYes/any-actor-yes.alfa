@@ -2,42 +2,48 @@ namespace fabricYes {
     advice reasonToDeny = "urn:fabric:authz:xacml:actor:a:deny"
 
     policyset AnyActorYesPolicy = "urn:fabric:authz:xacml:actor:ps" {
-        apply firstApplicable
-
-        policyset createPolicySet = "urn:fabric:authz:xacml:actor:ps:create" {
-            target clause Attributes.actionId == "create"
+        apply denyUnlessPermit
+        
+        policyset actionPolicySet = "urn:fabric:authz:xacml:actor:ps:create" {
+            target clause Attributes.actionId == "create" or 
+                Attributes.actionId == "modify" or 
+                Attributes.actionId == "delete" or
+                Attributes.actionId == "query" or 
+                Attributes.actionId == "status" or
+                Attributes.actionId == "redeem" or
+                Attributes.actionId == "POA" or
+                Attributes.actionId == "renew" or 
+                Attributes.actionId == "demand" or 
+                Attributes.actionId == "update" or
+                Attributes.actionId == "close" or
+                Attributes.actionId == "claim" or
+                Attributes.actionId == "reclaim" or
+                Attributes.actionId == "ticket" or
+                Attributes.actionId == "extend" or
+                Attributes.actionId == "relinquish"
             apply denyUnlessPermit
 
-            policy createPolicy = "urn:fabric:authz:xacml:actor:p:create" {
-                target clause Attributes.actionId == "create"
+            policy actionPolicy = "urn:fabric:authz:xacml:actor:p:create" {
+                target clause Attributes.actionId == "create" or 
+                    Attributes.actionId == "modify" or 
+                    Attributes.actionId == "delete" or
+                    Attributes.actionId == "query" or 
+                    Attributes.actionId == "status" or
+                    Attributes.actionId == "redeem" or
+                    Attributes.actionId == "POA" or
+                    Attributes.actionId == "renew" or 
+                    Attributes.actionId == "demand" or 
+                    Attributes.actionId == "update" or
+                    Attributes.actionId == "close" or
+                    Attributes.actionId == "claim" or
+                    Attributes.actionId == "reclaim" or
+                    Attributes.actionId == "ticket" or
+                    Attributes.actionId == "extend" or
+                    Attributes.actionId == "relinquish"
+
                 apply denyUnlessPermit
 
                 // always say 'yes'
-                rule {
-                    permit
-                }
-            }
-        }
-
-        policyset queryPolicy = "urn:fabric:authz:xacml:actor:ps:query" {
-            target clause Attributes.actionId == "query"
-            apply denyUnlessPermit
-            
-            // policy for querying users
-            policy queryUser = "urn:fabric:authz:xacml:actor:p:queryuser" {
-                target clause Attributes.resourceType == "user"
-                apply denyUnlessPermit
-                
-                // permit rule for everyone
-                rule {
-                    permit
-                }
-            }
-
-            policy querySlice = "urn:fabric:authz:xacml:actor:p:queryslice" {
-                target clause Attributes.resourceType == "slice"
-                apply denyUnlessPermit
-
                 rule {
                     permit
                 }

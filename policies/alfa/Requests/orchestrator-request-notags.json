@@ -25,43 +25,19 @@
             "IncludeInResult":false,
             "AttributeId":"urn:fabric:xacml:attributes:resource-disk",
             "DataType":"http://www.w3.org/2001/XMLSchema#integer",
-            "Value": [20]
-          },
-          {
-            "IncludeInResult":false,
-            "AttributeId":"urn:fabric:xacml:attribute:resource-component",
-            "DataType":"http://www.w3.org/2001/XMLSchema#string",
-            "Value": ["GPU", "FPGA", "SharedNIC"]
+            "Value": [1]
           },
           {
             "IncludeInResult":false,
             "AttributeId": "urn:fabric:xacml:attribute:resource-site",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
-            "Value": ["RENC", "UKY"]
-          },
-          {
-            "IncludeInResult":false,
-            "AttributeId": "urn:fabric:xacml:attribute:resource-facility-port",
-            "DataType":"http://www.w3.org/2001/XMLSchema#string",
-            "Value": ["RENC", "UKY"]
-          },
-          {
-            "IncludeInResult":false,
-            "AttributeId": "urn:fabric:xacml:attribute:resource-peersite",
-            "DataType":"http://www.w3.org/2001/XMLSchema#string",
-            "Value": ["STAR"]
+            "Value": ["RENC"]
           },
           {
             "IncludeInResult":false,
             "AttributeId": "urn:fabric:xacml:attribute:resource-bw",
             "DataType":"http://www.w3.org/2001/XMLSchema#integer",
-            "Value": [1, 1, 1, 1, 11]
-          },
-          {
-            "IncludeInResult":false,
-            "AttributeId": "urn:fabric:xacml:attribute:resource-with-measurements",
-            "DataType": "http://www.w3.org/2001/XMLSchema#boolean",
-            "Value": ["true"]
+            "Value": [1, 1, 1, 1, 10]
           },
           {
             "IncludeInResult":false,
@@ -90,7 +66,7 @@
             "IncludeInResult":false,
             "AttributeId":"urn:fabric:xacml:attributes:resource-lifetime",
             "DataType":"http://www.w3.org/2001/XMLSchema#dayTimeDuration",
-            "Value": ["P10D"]
+            "Value": ["P14D"]
           }
         ]
       },
@@ -108,12 +84,6 @@
             "AttributeId":"urn:fabric:xacml:attributes:subject-project",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
             "Value":["FABRIC"]
-          },
-          {
-            "IncludeInResult":false,
-            "AttributeId":"urn:fabric:xacml:attributes:project-tag",
-            "DataType":"http://www.w3.org/2001/XMLSchema#string",
-            "Value":["Component.FPGA", "Component.GPU", "VM.NoLimitDisk", "Slice.Multisite", "Net.Peering", "Net.NoLimitBW",  "Net.StitchPort.UKY", "Net.StitchPort.RENC", "Slice.Measurements", "VM.NoLimitDisk"]
           }
         ]
       }

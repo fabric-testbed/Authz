@@ -26,6 +26,18 @@
             "AttributeId":"urn:fabric:xacml:attributes:resource-vmdisk",
             "DataType":"http://www.w3.org/2001/XMLSchema#integer",
             "Value": [10]
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId": "urn:fabric:xacml:attributes:resource-subject",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value": ["ibaldin@renci.org"]
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId": "urn:fabric:xacml:attributes:resource-project",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value": ["TEST"]
           }
         ]
       },
@@ -36,7 +48,7 @@
             "IncludeInResult":false,
             "AttributeId":"urn:oasis:names:tc:xacml:1.0:action:action-id",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
-            "Value":["create"]
+            "Value":["modify"]
           }
         ]
       },
@@ -47,7 +59,13 @@
             "IncludeInResult":false,
             "AttributeId":"urn:oasis:names:tc:xacml:1.0:subject:subject-id",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
-            "Value":["ibaldin@renci.org"]
+            "Value":["ibaldiny@renci.org"]
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:subject-project",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value":["TEST"]
           },
           {
             "IncludeInResult":false,

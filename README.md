@@ -118,17 +118,17 @@ The following is an incomplete list of possible project tag values:
 - VM.NoLimitCPU - allows to create VMs with X CPUs or more
 - VM.NoLimitRAM - allows to create VMs with X GB of RAM or more
 - VM.NoLimitDisk - allows to create VMs with X GB of disk or more
-- VM.NoLimit - Sliver.NoLimitCPU | Sliver.NoLimitRAM | Sliver.NoLimitDisk
-- Component.GPU - allows to provision slivers with GPUs
-- Component.FPGA - allows to provision slivers with FPGAs
-- Component.SmartNIC - allows to provision 25G and 100G dedicated SmartNICs
+- VM.NoLimit - VM.NoLimitCPU | VM.NoLimitRAM | VM.NoLimitDisk
+- Component.GPU - allows to provision and attach GPU components
+- Component.FPGA - allows to provision and attach FPGA components
+- Component.SmartNIC - allows to provision and attach 25G and 100G dedicated SmartNIC components
 - Component.Storage - allows to create and attach rotating storage
-- Component.NVME - allows to create and attach NVME drives
+- Component.NVME - allows to provision and attach NVME components
 - Net.NoLimitBW - allows to provision links over X Gbps
 - Net.Peering - allows to create slices with public peering
 - Net.PortMirroring - allows to create slices that include port mirroring
-- Net.StitchPort.XXX - allows to create slices with stitch port with short name XXX
-- Net.AllStitchPorts - allows to create slices with any stitchport
+- Net.FacilityPort.XXX - allows to create slices with stitch port with short name XXX
+- Net.AllFacilityPorts - allows to create slices with any stitchport
 - Slice.Multisite - allows to create slices spanning multiple sites
 - Slice.Measurements - allows to provision measurement VMs
 - Slice.NoLimitLifetime - allows to create slices with a lifetime beyond default limit X time units without the need to renew

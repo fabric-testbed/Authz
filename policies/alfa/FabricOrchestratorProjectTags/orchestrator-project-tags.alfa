@@ -3,6 +3,11 @@ namespace fabricTags {
 
     policyset OrchestratorTags = "urn:fabric:authz:xacml:orchestrator:tags" {
         apply denyUnlessPermit
+        on deny {
+            advice reasonToDeny {
+                Attributes.message = "Policy Violation: Policy returned deny for an unknown reason. This is an internal error."
+            }
+        }
 
         //
         // applies to create operations - looks at sizes, components, network features,
@@ -26,7 +31,7 @@ namespace fabricTags {
 
                     rule vmSizeCPU {
                         deny
-                        condition Attributes.resourceVMCPUs > 2 && not(Attributes.projectTag == "VM.NoLimitCPU")
+                        condition Attributes.resourceCPU > 2 && not(Attributes.projectTag == "VM.NoLimitCPU")
                         on deny {
                             advice reasonToDeny {
                                 Attributes.message = "Policy Violation: Your project is lacking VM.NoLimitCPU or VM.NoLimit tag to provision VM with more than 2 cores."
@@ -35,7 +40,7 @@ namespace fabricTags {
                     }
                     rule vmSizeDisk {
                         deny
-                        condition Attributes.resourceVMDisk > 10 && not(Attributes.projectTag == "VM.NoLimitDisk")
+                        condition Attributes.resourceDisk > 10 && not(Attributes.projectTag == "VM.NoLimitDisk")
                         on deny {
                             advice reasonToDeny {
                                 Attributes.message = "Policy Violation: Your project is lacking VM.NoLimitDisk or VM.NoLimit tag to provision VM with disk over 10GB."
@@ -44,7 +49,7 @@ namespace fabricTags {
                     }
                     rule vmSizeRAM {
                         deny
-                        condition Attributes.resourceVMRAM > 10 && not(Attributes.projectTag == "VM.NoLimitRAM")
+                        condition Attributes.resourceRAM > 10 && not(Attributes.projectTag == "VM.NoLimitRAM")
                         on deny {
                             advice reasonToDeny {
                                 Attributes.message = "Policy Violation: Your project is lacking VM.NoLimitRAM or VM.NoLimit tag to provision VM with more than 10GB of RAM."
@@ -63,7 +68,7 @@ namespace fabricTags {
                     // this doesn't have on deny message on purpose - everything is said above if needed
                     rule vmSizeAny {
                         deny
-                        condition (Attributes.resourceVMCPUs > 2 || Attributes.resourceVMRAM > 10 || Attributes.resourceVMDisk > 10) &&
+                        condition (Attributes.resourceCPU > 2 || Attributes.resourceRAM > 10 || Attributes.resourceDisk > 10) &&
                             not(Attributes.projectTag == "VM.NoLimit")
                     }
                 }
@@ -163,7 +168,7 @@ namespace fabricTags {
 
                     rule bandwidth {
                         deny
-                        condition Attributes.resourceLinkBW > 10 && not(Attributes.projectTag == "Net.NoLimitBW")
+                        condition Attributes.resourceBW > 10 && not(Attributes.projectTag == "Net.NoLimitBW")
                         on deny {
                             advice reasonToDeny {
                                 Attributes.message = "Policy Violation: Your project is lacking Net.NoLimitBW tag to request links with bandwidth over 10Gbps."
@@ -172,7 +177,7 @@ namespace fabricTags {
                     }
                     rule withStitchPorts {
                         deny 
-                        condition stringBagSize(Attributes.resourceStitchPort) > 0 && not(map(function[stringConcatenate], "Net.StitchPort.", Attributes.resourceStitchPort) == Attributes.projectTag)
+                        condition stringBagSize(Attributes.resourceFacilityPort) > 0 && not(map(function[stringConcatenate], "Net.StitchPort.", Attributes.resourceFacilityPort) == Attributes.projectTag)
                         on deny {
                             advice reasonToDeny {
                                 Attributes.message = "Policy Violation: Your project is lacking Net.StitchPort.XXX tag to request a slice with stitch ports to sites."
@@ -206,7 +211,7 @@ namespace fabricTags {
                     // check that requested created lifetime doesn't exceed two weeks
                     rule longlived {
                         deny
-                        condition dateTimeAddDayTimeDuration(dateTimeOneAndOnly(Attributes.currentDateTime), dayTimeDurationFromString("P14D")) <
+                        condition dateTimeAddDayTimeDuration(dateTimeOneAndOnly(Attributes.currentDateTime), dayTimeDurationFromString("P14DT5M")) <
                             dateTimeAddDayTimeDuration(dateTimeOneAndOnly(Attributes.currentDateTime), dayTimeDurationOneAndOnly(Attributes.resourceLifetime)) &&
                             not(Attributes.projectTag == "Slice.NoLimitLifetime")
                         on deny {
@@ -239,12 +244,7 @@ namespace fabricTags {
 
                 rule {
                     permit
-                    condition Attributes.subjectId[mustbepresent] == Attributes.resourceSubject[mustbepresent]
-                }
-
-                rule {
-                    permit
-                    condition Attributes.subjectProject[mustbepresent] == Attributes.resourceProject[mustbepresent]
+                    condition Attributes.subjectId[mustbepresent] == Attributes.resourceSubject[mustbepresent] || Attributes.subjectProject[mustbepresent] == Attributes.resourceProject[mustbepresent]
                 }
             }
         }
@@ -275,49 +275,86 @@ namespace fabricTags {
         }
 
         //
-        // Authorizing Extend operations
+        // Authorizing renew operations
         //
-        policyset Extend = "urn:fabric:authz:xacml:orchestrator:tags:extend" {
+        policyset Renew = "urn:fabric:authz:xacml:orchestrator:tags:renew" {
             target
-            clause Attributes.actionId == "extend"
+            clause Attributes.actionId == "renew"
             apply permitUnlessDeny
 
-            policy extendBy = "urn:fabric:authz:xacml:orchestrator:tags:extend:by" {
+            policy renewBy = "urn:fabric:authz:xacml:orchestrator:tags:renew:by" {
                 target clause Attributes.resourceType == "sliver"
                 // here we need an explicit permit, or else deny (even if attribute is missing)
                 apply denyUnlessPermit
                 on deny {
                     advice reasonToDeny {
-                        Attributes.message = "Policy Violation: You are not the creator of this resource and not the member of the same project so you cannot extend it."
+                        Attributes.message = "Policy Violation: You are not the creator of this resource and not the member of the same project so you cannot renew it."
                     }
                 }
 
                 rule {
                     permit
-                    condition Attributes.subjectId[mustbepresent] == Attributes.resourceSubject[mustbepresent]
+                    condition Attributes.subjectId[mustbepresent] == Attributes.resourceSubject[mustbepresent] || Attributes.subjectProject[mustbepresent] == Attributes.resourceProject[mustbepresent]
                 }
 
-                rule {
-                    permit
-                    condition Attributes.subjectProject[mustbepresent] == Attributes.resourceProject[mustbepresent]
-                }
             }
 
-            policy extendLimit = "urn:fabric:authz:xacml:orchestrator:tags:extend:limit" {
+            policy renewLimit = "urn:fabric:authz:xacml:orchestrator:tags:renew:limit" {
                 target clause Attributes.resourceType == "sliver"
                 apply permitUnlessDeny
 
                 // check that requested extend lifetime doesn't exceed two weeks
                 rule longlived {
                     deny
-                    condition dateTimeAddDayTimeDuration(dateTimeOneAndOnly(Attributes.currentDateTime), dayTimeDurationFromString("P14D")) < 
+                    condition dateTimeAddDayTimeDuration(dateTimeOneAndOnly(Attributes.currentDateTime), dayTimeDurationFromString("P14DT5M")) < 
                         dateTimeAddDayTimeDuration(dateTimeOneAndOnly(Attributes.currentDateTime), dayTimeDurationOneAndOnly(Attributes.resourceLifetime)) &&
                         not(Attributes.projectTag == "Slice.NoLimitLifetime")
                     on deny {
                         advice reasonToDeny {
-                            Attributes.message = "Policy Violation: Your project is lacking Slice.NoLimitLifetime tag so you cannot extend resource lifetime by longer than two weeks."
+                            Attributes.message = "Policy Violation: Your project is lacking Slice.NoLimitLifetime tag so you cannot renew resource lifetime by longer than two weeks."
                         }
                     }
+                }
+            }
+        }
+
+        //
+        // all other actions we say yes
+        //
+        policyset AllOthers = "urn:fabric:authz:xacml:orchestrator:tags:allothers" {
+            target clause Attributes.actionId == "query" or 
+                Attributes.actionId == "status" or
+                Attributes.actionId == "redeem" or
+                Attributes.actionId == "POA" or
+                Attributes.actionId == "demand" or 
+                Attributes.actionId == "update" or
+                Attributes.actionId == "close" or
+                Attributes.actionId == "claim" or
+                Attributes.actionId == "reclaim" or
+                Attributes.actionId == "ticket" or
+                Attributes.actionId == "extend" or
+                Attributes.actionId == "relinquish"
+            apply denyUnlessPermit
+
+            policy actionPolicy = "urn:fabric:authz:xacml:orchestrator:tags:allothers:all" {
+                target clause Attributes.actionId == "query" or 
+                    Attributes.actionId == "status" or
+                    Attributes.actionId == "redeem" or
+                    Attributes.actionId == "POA" or
+                    Attributes.actionId == "demand" or 
+                    Attributes.actionId == "update" or
+                    Attributes.actionId == "close" or
+                    Attributes.actionId == "claim" or
+                    Attributes.actionId == "reclaim" or
+                    Attributes.actionId == "ticket" or
+                    Attributes.actionId == "extend" or
+                    Attributes.actionId == "relinquish"
+
+                apply denyUnlessPermit
+
+                // always say 'yes'
+                rule {
+                    permit
                 }
             }
         }

@@ -11,19 +11,19 @@
           },
           {
             "IncludeInResult":false,
-            "AttributeId":"urn:fabric:xacml:attributes:resource-vmcpus",
+            "AttributeId":"urn:fabric:xacml:attributes:resource-cpu",
             "DataType":"http://www.w3.org/2001/XMLSchema#integer",
             "Value": [1, 2, 2, 2, 2]
           },
           {
             "IncludeInResult":false,
-            "AttributeId":"urn:fabric:xacml:attributes:resource-vmram",
+            "AttributeId":"urn:fabric:xacml:attributes:resource-ram",
             "DataType":"http://www.w3.org/2001/XMLSchema#integer",
             "Value": [1, 5, 10]
           },
           {
             "IncludeInResult":false,
-            "AttributeId":"urn:fabric:xacml:attributes:resource-vmdisk",
+            "AttributeId":"urn:fabric:xacml:attributes:resource-disk",
             "DataType":"http://www.w3.org/2001/XMLSchema#integer",
             "Value": [20]
           },

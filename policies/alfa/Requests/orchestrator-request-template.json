@@ -11,19 +11,19 @@
           },
           {
             "IncludeInResult":false,
-            "AttributeId":"urn:fabric:xacml:attributes:resource-vmcpus",
+            "AttributeId":"urn:fabric:xacml:attributes:resource-cpu",
             "DataType":"http://www.w3.org/2001/XMLSchema#integer",
             "Value": []
           },
           {
             "IncludeInResult":false,
-            "AttributeId":"urn:fabric:xacml:attributes:resource-vmram",
+            "AttributeId":"urn:fabric:xacml:attributes:resource-ram",
             "DataType":"http://www.w3.org/2001/XMLSchema#integer",
             "Value": []
           },
           {
             "IncludeInResult":false,
-            "AttributeId":"urn:fabric:xacml:attributes:resource-vmdisk",
+            "AttributeId":"urn:fabric:xacml:attributes:resource-visk",
             "DataType":"http://www.w3.org/2001/XMLSchema#integer",
             "Value": []
           },
@@ -41,7 +41,7 @@
           },
           {
             "IncludeInResult":false,
-            "AttributeId": "urn:fabric:xacml:attribute:resource-stitch-port",
+            "AttributeId": "urn:fabric:xacml:attribute:resource-facility-port",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
             "Value": []
           },
@@ -53,7 +53,7 @@
           },
           {
             "IncludeInResult":false,
-            "AttributeId": "urn:fabric:xacml:attribute:resource-link-bw",
+            "AttributeId": "urn:fabric:xacml:attribute:resource-bw",
             "DataType":"http://www.w3.org/2001/XMLSchema#integer",
             "Value": []
           },
