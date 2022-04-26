@@ -37,12 +37,11 @@ Projects are bound to specific facilities at the time of creation, thus effectiv
 | 8. Facility Operator includes privileges of a Project Owner on a project (can add remove members) | ProjectRegistry |
 | 9. Project Owner includes privileges as Project Member | ProjectRegistry |
 | 10. Project Member can create slices within a project at a facility | XACML PDPs |
-| 11. Project Member can delete a slice they created, as long as no slivers created by other members exist in the slice at a facility | XACML PDPs |
+| 11. Project Member can delete a slice they created or any slice in their project | XACML PDPs |
 | 12. Project Member can create slivers within any project slice subject to federation- or aggregate-level resource constraints at a facility | XACML PDPs |
-| 13. Project Member can modify or delete any sliver created by them in any project slice. Modify operations are subject to federation- and aggregate-level resource constraints. | XACML PDPs |
-| 14. Project Owner can modify or delete any sliver belonging to a slice created within their project. Modify operations are subject to federation- and aggregate-level resource constraints. | XACML PDPs |
-| 15. Facility Operator is also a Project Member for any project (can create/delete slices and slivers) subject to project resource constraints. | XACML PDPs |
-| 16. Resource type/project tag based policies | XACML PDPs |
+| 13. Project Owner can modify or delete any sliver belonging to a slice created within their project. Modify operations are subject to federation- and aggregate-level resource constraints. | XACML PDPs |
+| 14. Facility Operator is also a Project Member for any project (can create/delete slices and slivers) subject to project resource constraints. | ProjectRegistry |
+| 15. Resource type/project tag based policies | XACML PDPs |
 
 Rules 1-9 of the project management policies above are embedded in the [ProjectRegistry](https://github.com/fabric-testbed/project-registry) procedural code and CI Logon logic. The remaining rules are federation-level and are implemented using XACML PDPs.
 
@@ -90,24 +89,6 @@ Using CI Logon many of the EduCause attributes should be available.
 | fabric-role | Project Lead, Project Owner, Project Member | FABRIC/CI Logon | fabric role can be a predicate of arity 1 or 2: projectLead(Alice), but projectOwner(Alice, Project-X).  |
 | fabric-project | String | FABRIC/CI Logon |  Needs to relate to fabric role above |
 
-### Resource Attributes
-
-| Attribute | Values or Type | Notes |
-| --- | --- | --- |
-| resource-type | project, slice, sliver | Top level resource type for authorization |
-| resource-subject | String |  |
-| resource-site | String |  | 
-| resource-vmcpus     | Integer | CPUs in a VM |
-| resource-vmram    | Integer | RAM size in GB |
-| resource-vmdisk | Integer | Embedded disk size in GB |
-| resource-component | String | A component attached to a VM |
-
-### Action Attributes
-
-| Attribute | Values or Type | Notes |
-| --- | --- | --- | 
-| action-id | String | 
-
 ### Project Attributes/Tags
 
 | Attribute | Values or Type | Notes |
@@ -144,10 +125,7 @@ The following is an incomplete list of possible project tag values:
 | removeOwner   | project  |   |
 | addMember     | project  |   |
 | removeMember  | project  |   |
-| create   | slice, sliver  |   |
-| delete   | slice, sliver  |   |
-| modify   | slice, sliver  |   |
-| renew    | slice, sliver  |   |
+| create, delete, modify, query, status, redeem, POA, renew, demand, update, close, claim, reclaim, ticket, extend, relinquish  | slice, sliver  |   |
 
 ### Common FABRIC Request Structure
 
@@ -180,7 +158,7 @@ Category ID: urn:oasis:names:tc:xacml:3.0:attribute-category:action
 
 | Attribute ID | Attribute Values | Attribute Description | 
 | --- | --- | --- |
-| urn:oasis:names:tc:xacml:1.0:action:action-id | "create", "delete", "modify" | |
+| urn:oasis:names:tc:xacml:1.0:action:action-id | create, delete, modify, query, status, redeem, POA, renew, demand, update, close, claim, reclaim, ticket, extend, relinquish | Action on a sliver or slice by AM, Orchestrator or Broker |
 | urn:fabric:xacml:attributes:resource-lifetime | TimeDuration | Sliver or slice lifetime request |
 
 #### Access Subject Attributes
