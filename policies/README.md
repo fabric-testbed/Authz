@@ -1,5 +1,7 @@
 # Overview
-This folder contains various implementation of test and production policies. All production policies are located in the [alfa](alfa) folder. Other policies are provided as examples. 
+This folder contains various implementation of test and production policies. 
+
+All production policies are located in the [alfa](alfa) folder. Other policies are provided as examples. 
 
 # Specification
 

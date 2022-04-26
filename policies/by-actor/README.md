@@ -1,8 +1,8 @@
 # Overview
 
-This  folder contains implementations of policies for individual Control Framework actors and example requests in XML and JSON. These are expected to be executed by an XACML [Docker PDP](https://github.com/fabric-testbed/fabric-docker-images/tree/master/authzforce-pdp).
+This  folder contains handcrafted implementations of policies for individual Control Framework actors and example requests in XML and JSON. These are expected to be executed by an XACML [Docker PDP](https://github.com/fabric-testbed/fabric-docker-images/tree/master/authzforce-pdp).
 
-Most of the details for running tests described in the [README](../README.md) file apply here.
+THESE HAVE BEEN OBSOLETED IN FAVOR OF [ALFA-based](../alfa) POLICIES. THESE ARE PRESERVED FOR HISTORICAL REASONS.
 
 Different folders contain different sets of policies applicable to different conditions:
 
