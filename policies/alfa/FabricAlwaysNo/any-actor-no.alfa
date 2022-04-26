@@ -1,0 +1,59 @@
+namespace fabricNo {
+    advice reasonToDeny = "urn:fabric:authz:xacml:actor:a:no:deny"
+
+    policyset AnyActorNoPolicy = "urn:fabric:authz:xacml:actor:no:ps" {
+        apply denyUnlessPermit
+
+        on deny {
+            advice reasonToDeny {
+                Attributes.message = "Policy Violation: This policy always says Deny."
+            }
+        }
+        
+        policyset actionPolicySet = "urn:fabric:authz:xacml:actor:no:ps:create" {
+            target clause Attributes.actionId == "create" or 
+                Attributes.actionId == "modify" or 
+                Attributes.actionId == "delete" or
+                Attributes.actionId == "query" or 
+                Attributes.actionId == "status" or
+                Attributes.actionId == "redeem" or
+                Attributes.actionId == "POA" or
+                Attributes.actionId == "renew" or 
+                Attributes.actionId == "demand" or 
+                Attributes.actionId == "update" or
+                Attributes.actionId == "close" or
+                Attributes.actionId == "claim" or
+                Attributes.actionId == "reclaim" or
+                Attributes.actionId == "ticket" or
+                Attributes.actionId == "extend" or
+                Attributes.actionId == "relinquish"
+            apply denyUnlessPermit
+
+            policy actionPolicy = "urn:fabric:authz:xacml:actor:no:p:create" {
+                target clause Attributes.actionId == "create" or 
+                    Attributes.actionId == "modify" or 
+                    Attributes.actionId == "delete" or
+                    Attributes.actionId == "query" or 
+                    Attributes.actionId == "status" or
+                    Attributes.actionId == "redeem" or
+                    Attributes.actionId == "POA" or
+                    Attributes.actionId == "renew" or 
+                    Attributes.actionId == "demand" or 
+                    Attributes.actionId == "update" or
+                    Attributes.actionId == "close" or
+                    Attributes.actionId == "claim" or
+                    Attributes.actionId == "reclaim" or
+                    Attributes.actionId == "ticket" or
+                    Attributes.actionId == "extend" or
+                    Attributes.actionId == "relinquish"
+
+                apply denyUnlessPermit
+
+                // always say 'no'
+                rule {
+                    deny
+                }
+            }
+        }
+    }
+}

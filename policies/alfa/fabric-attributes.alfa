@@ -1,0 +1,99 @@
+namespace Attributes {
+    import System.*
+
+    attribute message {
+        id = "urn:oasis:names:tc:xacml:1.0:subject:message"
+        type = string
+        category = subjectCat
+    }
+
+    attribute resourceType {
+        id = "urn:fabric:xacml:attributes:resource-type"
+        type = string
+        category = resourceCat
+    }
+
+    attribute resourceSubject {
+        id = "urn:fabric:xacml:attributes:resource-subject"
+        type = string
+        category = resourceCat
+    }
+
+    attribute resourceProject {
+        id = "urn:fabric:xacml:attributes:resource-project"
+        type = string
+        category = resourceCat
+    }
+
+    attribute projectTag {
+        id = "urn:fabric:xacml:attributes:project-tag"
+        type = string
+        category = subjectCat
+    }
+
+    attribute resourceCPU {
+        id = "urn:fabric:xacml:attributes:resource-cpu"
+        type = integer
+        category = resourceCat
+    }
+
+    attribute resourceRAM {
+        id = "urn:fabric:xacml:attributes:resource-ram"
+        type = integer
+        category = resourceCat
+    }
+
+    attribute resourceDisk {
+        id = "urn:fabric:xacml:attributes:resource-disk"
+        type = integer
+        category = resourceCat
+    }
+
+    attribute resourceComponent {
+        id = "urn:fabric:xacml:attribute:resource-component"
+        type = string
+        category = resourceCat
+    }
+
+    attribute resourcePeerSite {
+        id = "urn:fabric:xacml:attribute:resource-peersite"
+        type = string
+        category = resourceCat
+    }
+
+    attribute resourceFacilityPort {
+        id = "urn:fabric:xacml:attribute:resource-facility-port"
+        type = string
+        category = resourceCat
+    }
+
+    attribute resourceSite {
+        id = "urn:fabric:xacml:attribute:resource-site"
+        type = string
+        category = resourceCat
+    }
+
+    attribute resourceBW {
+        id = "urn:fabric:xacml:attribute:resource-bw"
+        type = integer
+        category = resourceCat
+    }
+
+    attribute resourceWithMeasurements {
+        id = "urn:fabric:xacml:attribute:resource-with-measurements"
+        type = boolean
+        category = resourceCat
+    }
+
+    attribute subjectProject {
+        id = "urn:fabric:xacml:attributes:subject-project"
+        type = string
+        category = subjectCat
+    }
+
+    attribute resourceLifetime {
+        id = "urn:fabric:xacml:attributes:resource-lifetime"
+        type = dayTimeDuration
+        category = actionCat
+    }
+}

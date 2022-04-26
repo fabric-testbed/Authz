@@ -1,0 +1,80 @@
+{"Request":{"ReturnPolicyIdList":false,"CombinedDecision":false,
+    "Category":[
+      {
+        "CategoryId":"urn:oasis:names:tc:xacml:3.0:attribute-category:resource",
+        "Attribute":[
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:resource-type",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value": ["sliver"]
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:resource-vmcpus",
+            "DataType":"http://www.w3.org/2001/XMLSchema#integer",
+            "Value": [1, 2, 2, 2, 5]
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:resource-vmram",
+            "DataType":"http://www.w3.org/2001/XMLSchema#integer",
+            "Value": [1, 5, 10]
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:resource-vmdisk",
+            "DataType":"http://www.w3.org/2001/XMLSchema#integer",
+            "Value": [10]
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId": "urn:fabric:xacml:attributes:resource-subject",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value": ["ibaldin@renci.org"]
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId": "urn:fabric:xacml:attributes:resource-project",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value": ["TEST"]
+          }
+        ]
+      },
+      {
+        "CategoryId":"urn:oasis:names:tc:xacml:3.0:attribute-category:action",
+        "Attribute":[
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:oasis:names:tc:xacml:1.0:action:action-id",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value":["modify"]
+          }
+        ]
+      },
+      {
+        "CategoryId":"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject",
+        "Attribute":[
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:oasis:names:tc:xacml:1.0:subject:subject-id",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value":["ibaldiny@renci.org"]
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:subject-project",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value":["TEST"]
+          },
+          {
+            "IncludeInResult":false,
+            "AttributeId":"urn:fabric:xacml:attributes:project-tag",
+            "DataType":"http://www.w3.org/2001/XMLSchema#string",
+            "Value":["VM.NoLimitCPU"]
+          }
+        ]
+      }
+    ]
+  }
+}
