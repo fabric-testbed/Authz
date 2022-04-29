@@ -167,7 +167,41 @@ class PolicyTest(unittest.TestCase):
         ])
         authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
 
-        print(authz.transform_to_pdp_request())
+        print(f"CreateSliceOK: {authz.transform_to_pdp_request()}")
+        self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP)
+
+    def testCreateSliceWithMirrorOK(self) -> None:
+        """
+        Create an ASM
+        """
+        t = fu.ExperimentTopology()
+
+        n1 = t.add_node(name='n1', site='RENC', capacities=fu.Capacities(ram=20, cpu=1, core=9, disk=110))
+        self.assertEqual(n1.capacities.core, 9)
+        c1 = n1.add_component(name='com1', model_type=fu.ComponentModelType.SmartNIC_ConnectX_6)
+        n2 = t.add_node(name='n2', site='UKY', capacities=fu.Capacities(ram=20, cpu=1, core=9, disk=110))
+        c2 = n2.add_component(name= 'com2', model_type=fu.ComponentModelType.SmartNIC_ConnectX_6)
+        ns1 = t.add_network_service(name='ns1', nstype=fu.ServiceType.L2PTP, interfaces=[n1.interface_list[0],
+                                                                                         n2.interface_list[0]])
+        ns2 = t.add_port_mirror_service(name='mir1', from_interface_name='blah', to_interface=n1.interface_list[1])
+        authz = ResourceAuthZAttributes()
+
+        now = datetime.datetime.now(datetime.timezone.utc)
+        delta = datetime.timedelta(days=13, hours=11, minutes=7, seconds=4, milliseconds=10)
+        future = now + delta
+
+        authz.collect_resource_attributes(source=t)
+        authz.set_action('create')
+        authz.set_lifetime(future)
+        authz.set_subject_attributes(subject_id='user@google.com', project='MyProject', project_tag=[
+            'VM.NoLimit',
+            'Component.SmartNIC',
+            'Slice.Multisite',
+            'Net.PortMirroring'
+        ])
+        authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
+
+        print(f"CreateSliceWithMirrorOK: {authz.transform_to_pdp_request()}")
         self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP)
 
     def testCreateSliceFail(self) -> None:
@@ -195,7 +229,7 @@ class PolicyTest(unittest.TestCase):
         ])
         authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
 
-        print(authz.transform_to_pdp_request())
+        print(f"CreateSliceFail: {authz.transform_to_pdp_request()}")
         self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP, 'Deny')
 
     def testCreateSliverOK(self) -> None:
@@ -225,7 +259,7 @@ class PolicyTest(unittest.TestCase):
         ])
         authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
 
-        print(authz.transform_to_pdp_request())
+        print(f"CreateSliverOK: {authz.transform_to_pdp_request()}")
 
         self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP)
 
@@ -254,7 +288,7 @@ class PolicyTest(unittest.TestCase):
         ])
         authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
 
-        print(authz.transform_to_pdp_request())
+        print(f"CreateSliverFail: {authz.transform_to_pdp_request()}")
 
         self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP, 'Deny')
 
@@ -278,7 +312,7 @@ class PolicyTest(unittest.TestCase):
         ])
         authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
 
-        print(authz.transform_to_pdp_request())
+        print(f"RenewOK: {authz.transform_to_pdp_request()}")
 
         self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP)
 
@@ -303,7 +337,7 @@ class PolicyTest(unittest.TestCase):
         ])
         authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
 
-        print(authz.transform_to_pdp_request())
+        print(f"RenewFail: {authz.transform_to_pdp_request()}")
 
         self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP, 'Deny')
 
@@ -327,7 +361,7 @@ class PolicyTest(unittest.TestCase):
         # different user and project
         authz.set_resource_subject_and_project(subject_id='user1@google.com', project='MyOtherProject')
 
-        print(authz.transform_to_pdp_request())
+        print(f"RenewFail1: {authz.transform_to_pdp_request()}")
 
         self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP, 'Deny')
 
@@ -351,7 +385,7 @@ class PolicyTest(unittest.TestCase):
         # same user different project
         authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyOtherProject')
 
-        print(authz.transform_to_pdp_request())
+        print(f"ModifyOK: {authz.transform_to_pdp_request()}")
 
         self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP)
 
@@ -375,7 +409,7 @@ class PolicyTest(unittest.TestCase):
         # set a different project and user
         authz.set_resource_subject_and_project(subject_id='user1@google.com', project='MyOtherProject')
 
-        print(authz.transform_to_pdp_request())
+        print(f"ModifyFail: {authz.transform_to_pdp_request()}")
 
         self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP, 'Deny')
 
@@ -400,6 +434,6 @@ class PolicyTest(unittest.TestCase):
         # set a different project and user
         authz.set_resource_subject_and_project(subject_id='user1@google.com', project='MyOtherProject')
 
-        print(authz.transform_to_pdp_request())
+        print(f"ModifyFail1: {authz.transform_to_pdp_request()}")
 
         self.runOnStringRequest(authz.transform_to_pdp_request(), NOPDP, 'Deny', printResponse=True)

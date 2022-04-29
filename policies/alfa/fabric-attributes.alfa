@@ -61,6 +61,12 @@ namespace Attributes {
         category = resourceCat
     }
 
+    attribute resourceMirrorSite {
+        id = "urn:fabric:xacml:attribute:resource-mirrorsite"
+        type = string
+        category = resourceCat
+    }
+
     attribute resourceFacilityPort {
         id = "urn:fabric:xacml:attribute:resource-facility-port"
         type = string
