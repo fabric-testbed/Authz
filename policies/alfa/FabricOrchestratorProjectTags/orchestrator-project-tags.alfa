@@ -185,12 +185,12 @@ namespace fabricTags {
                             }
                         }
                     }
-                    rule withStitchPorts {
+                    rule withFacilityPorts {
                         deny 
-                        condition stringBagSize(Attributes.resourceFacilityPort) > 0 && not(map(function[stringConcatenate], "Net.StitchPort.", Attributes.resourceFacilityPort) == Attributes.projectTag)
+                        condition stringBagSize(Attributes.resourceFacilityPort) > 0 && not(map(function[stringConcatenate], "Net.FacilityPort.", Attributes.resourceFacilityPort) == Attributes.projectTag)
                         on deny {
                             advice reasonToDeny {
-                                Attributes.message = "Policy Violation: Your project is lacking Net.StitchPort.XXX tag to request a slice with stitch ports to sites."
+                                Attributes.message = "Policy Violation: Your project is lacking Net.FacilityPort.<facility-port-name> tag to request a slice with facility ports."
                             }
                         }
                     }
