@@ -96,16 +96,16 @@ Using CI Logon many of the EduCause attributes should be available.
 | project-tag | String |
 
 The following is an incomplete list of possible project tag values:
-- VM.NoLimitCPU - allows to create VMs with X CPUs or more
-- VM.NoLimitRAM - allows to create VMs with X GB of RAM or more
-- VM.NoLimitDisk - allows to create VMs with X GB of disk or more
+- VM.NoLimitCPU - allows to create VMs with more than 2 CPU cores
+- VM.NoLimitRAM - allows to create VMs with more than 10 GB of RAM
+- VM.NoLimitDisk - allows to create VMs with more than 10 GB of disk
 - VM.NoLimit - VM.NoLimitCPU | VM.NoLimitRAM | VM.NoLimitDisk
 - Component.GPU - allows to provision and attach GPU components
 - Component.FPGA - allows to provision and attach FPGA components
 - Component.SmartNIC - allows to provision and attach 25G and 100G dedicated SmartNIC components
 - Component.Storage - allows to create and attach rotating storage
 - Component.NVME - allows to provision and attach NVME components
-- Net.NoLimitBW - allows to provision links over X Gbps
+- Net.NoLimitBW - allows to provision links over 10 Gbps
 - Net.Peering - allows to create slices with public peering
 - Net.PortMirroring - allows to create slices that include port mirroring
 - Net.FacilityPort.XXX - allows to create slices with stitch port with short name XXX
