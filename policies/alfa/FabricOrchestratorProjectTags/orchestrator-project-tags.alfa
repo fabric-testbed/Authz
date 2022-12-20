@@ -197,10 +197,10 @@ namespace fabricTags {
                     }
                     rule withFacilityPorts {
                         deny 
-                        condition stringBagSize(Attributes.resourceFacilityPort) > 0 && not(map(function[stringConcatenate], "Net.FacilityPort.", Attributes.resourceFacilityPort) == Attributes.projectTag)
+                        condition stringBagSize(Attributes.resourceFacilityPort) > 0 && not(allOfAny(function[stringEqual], map(function[stringConcatenate], "Net.FacilityPort.", Attributes.resourceFacilityPort), Attributes.projectTag))
                         on deny {
                             advice reasonToDeny {
-                                Attributes.message = "Policy Violation: Your project is lacking Net.FacilityPort.<facility-port-name> tag to request a slice with facility ports."
+                                Attributes.message = "Policy Violation: Your project is lacking Net.FacilityPort.<facility-port-name> tag to request a connection to one or more of the facilities."
                             }
                         }
                     }

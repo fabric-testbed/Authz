@@ -607,11 +607,17 @@ class PolicyTest(unittest.TestCase):
         s2 = t.add_network_service(name='s2', nstype=fu.ServiceType.FABNetv6Ext,
                                    interfaces=[c4.interface_list[0]])
 
-        fac1 = t.add_facility(name='RENCI-DTN', site='RENC', capacities=fu.Capacities(bw=10),
+        fac1 = t.add_facility(name='UKY-DTN', site='UKY', capacities=fu.Capacities(bw=10),
                                       labels=fu.Labels(vlan='100'))
         # facility needs to be connected via a service to something else
         sfac = t.add_network_service(name='s-fac', nstype=fu.ServiceType.L2STS,
                                              interfaces=[fac1.interface_list[0],
+                                                         c4.interface_list[1]])
+        fac2 = t.add_facility(name='RENCI-DTN', site='RENC', capacities=fu.Capacities(bw=10),
+                                      labels=fu.Labels(vlan='100'))
+        # facility needs to be connected via a service to something else
+        sfac = t.add_network_service(name='s-fac1', nstype=fu.ServiceType.L2STS,
+                                             interfaces=[fac2.interface_list[0],
                                                          c1.interface_list[1]])
         # this sets site property on fabnet, which is a must
         t.validate()
@@ -628,7 +634,7 @@ class PolicyTest(unittest.TestCase):
         authz.set_subject_attributes(subject_id='user@google.com', project='MyProject', project_tag=[
             'VM.NoLimit',
             'Component.SmartNIC', 'Component.NVME', 'Net.FABNetv6Ext',
-            'Slice.Multisite', 'Net.FacilityPort.RENCI-DTN'
+            'Slice.Multisite', 'Net.FacilityPort.RENCI-DTN', 'Net.FacilityPort.UKY-DTN'
         ])
         authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
 
