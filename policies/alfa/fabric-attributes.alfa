@@ -55,8 +55,14 @@ namespace Attributes {
         category = resourceCat
     }
 
-    attribute resourcePeerSite {
-        id = "urn:fabric:xacml:attribute:resource-peersite"
+    attribute resourceFABNetv4ExtSite {
+        id = "urn:fabric:xacml:attribute:resource-fabnetv4-ext-site"
+        type = string
+        category = resourceCat
+    }
+
+    attribute resourceFABNetv6ExtSite {
+        id = "urn:fabric:xacml:attribute:resource-fabnetv6-ext-site"
         type = string
         category = resourceCat
     }

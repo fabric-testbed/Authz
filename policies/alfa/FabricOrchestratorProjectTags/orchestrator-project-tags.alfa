@@ -146,12 +146,22 @@ namespace fabricTags {
                     // precise deny permit otherwise
                     apply permitUnlessDeny
 
-                    rule withPeering {
+                    rule withFABNetv4Ext {
                         deny
-                        condition stringBagSize(Attributes.resourcePeerSite) > 0 && not(Attributes.projectTag == "Net.Peering")
+                        condition stringBagSize(Attributes.resourceFABNetv4ExtSite) > 0 && not(Attributes.projectTag == "Net.FABNetv4Ext")
                         on deny {
                             advice reasonToDeny {
-                                Attributes.message = "Policy Violation: Your project is lacking Net.Peering tag to request a slice with peering."
+                                Attributes.message = "Policy Violation: Your project is lacking Net.FABNetv4Ext tag to request a slice with external IPv4 connectivity."
+                            }
+                        }
+                    }
+
+                    rule withFABNetv6Ext {
+                        deny
+                        condition stringBagSize(Attributes.resourceFABNetv6ExtSite) > 0 && not(Attributes.projectTag == "Net.FABNetv6Ext")
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Policy Violation: Your project is lacking Net.FABNetv6Ext tag to request a slice with external IPv6 connectivity."
                             }
                         }
                     }

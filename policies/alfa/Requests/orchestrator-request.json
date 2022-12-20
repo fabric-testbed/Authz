@@ -43,7 +43,7 @@
             "IncludeInResult":false,
             "AttributeId": "urn:fabric:xacml:attribute:resource-facility-port",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
-            "Value": ["RENC", "UKY"]
+            "Value": ["UKY", "RENC"]
           },
           {
             "IncludeInResult":false,
@@ -113,7 +113,7 @@
             "IncludeInResult":false,
             "AttributeId":"urn:fabric:xacml:attributes:project-tag",
             "DataType":"http://www.w3.org/2001/XMLSchema#string",
-            "Value":["Component.FPGA", "Component.GPU", "VM.NoLimitDisk", "Slice.Multisite", "Net.Peering", "Net.NoLimitBW",  "Net.StitchPort.UKY", "Net.StitchPort.RENC", "Slice.Measurements", "VM.NoLimitDisk"]
+            "Value":["Component.FPGA", "Component.GPU", "VM.NoLimitDisk", "Slice.Multisite", "Net.FABNetv4Ext", "Net.NoLimitBW",  "Net.FacilityPort.UKY", "Net.FacilityPort.RENC", "Slice.Measurements", "VM.NoLimitDisk"]
           }
         ]
       }

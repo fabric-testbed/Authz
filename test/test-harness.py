@@ -22,7 +22,7 @@ NOPOLICYID = 'urn:fabric:authz:xacml:actor:no:ps'
 NOPDP = 'pdp-no.xml'
 
 # make sure the CLI executable and appropriate Java version are available
-AUTHZFORCECLI = '../authzforce/authzforce-ce-core-pdp-cli-17.1.2.jar'
+AUTHZFORCECLI = '../authzforce/authzforce-ce-core-pdp-cli-20.1.0.jar'
 PERMIT_REQUESTS = [ 
     '../policies/alfa/Requests/orchestrator-request-simplest.json',
     '../policies/alfa/Requests/orchestrator-request-simple.json',
@@ -35,8 +35,8 @@ def makePDPFile(policyFile, policyID, pdpFile):
     pdp_file = """<?xml version="1.0" encoding="UTF-8"?>
 <pdp
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://authzforce.github.io/core/xmlns/pdp/7"
-	version="7.1">
+	xmlns="http://authzforce.github.io/core/xmlns/pdp/8"
+	version="8.0">
 	<policyProvider
 		id="rootPolicyProvider"
 		xsi:type="StaticPolicyProvider">
@@ -437,3 +437,155 @@ class PolicyTest(unittest.TestCase):
         print(f"ModifyFail1: {authz.transform_to_pdp_request()}")
 
         self.runOnStringRequest(authz.transform_to_pdp_request(), NOPDP, 'Deny', printResponse=True)
+
+    def testFABNetv4ExtOK(self) -> None:
+
+        """
+        Test that adding FABNetv4 with proper tag works
+        """
+        t = fu.ExperimentTopology()
+        n1 = t.add_node(name='n1', site='RENC', capacities=fu.Capacities(core=1, ram=10, disk=25))
+        c1 = n1.add_component(name='c1', model_type=fu.ComponentModelType.SmartNIC_ConnectX_6)
+        c2 = n1.add_component(name='c2', model_type=fu.ComponentModelType.SharedNIC_ConnectX_6)
+        n1.add_component(name='c3', model_type=fu.ComponentModelType.NVME_P4510)
+        n2 = t.add_node(name='n2', site='UKY', capacities=fu.Capacities(core=10, ram=10, disk=35))
+        c4 = n2.add_component(name='c4', model_type=fu.ComponentModelType.SmartNIC_ConnectX_5)
+        s1 = t.add_network_service(name='s1', nstype=fu.ServiceType.FABNetv4Ext,
+                                   interfaces=[c1.interface_list[0]])
+        s2 = t.add_network_service(name='s2', nstype=fu.ServiceType.FABNetv4Ext,
+                                   interfaces=[c4.interface_list[0]])
+        # this sets site property on fabnet, which is a must
+        t.validate()
+
+        authz = ResourceAuthZAttributes()
+
+        now = datetime.datetime.now(datetime.timezone.utc)
+        delta = datetime.timedelta(days=13, hours=11, minutes=7, seconds=4, milliseconds=10)
+        future = now + delta
+
+        authz.collect_resource_attributes(source=t)
+        authz.set_action('create')
+        authz.set_lifetime(future)
+        authz.set_subject_attributes(subject_id='user@google.com', project='MyProject', project_tag=[
+            'VM.NoLimit',
+            'Component.SmartNIC', 'Component.NVME', 'Net.FABNetv4Ext',
+            'Slice.Multisite'
+        ])
+        authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
+
+        print(f"FABNetv4ExtOK: {authz.transform_to_pdp_request()}")
+        self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP)
+
+    def testFABNetv4ExtFail(self) -> None:
+
+        """
+        Test that adding FABNetv4 with proper tag works
+        """
+        t = fu.ExperimentTopology()
+        n1 = t.add_node(name='n1', site='RENC', capacities=fu.Capacities(core=1, ram=10, disk=25))
+        c1 = n1.add_component(name='c1', model_type=fu.ComponentModelType.SmartNIC_ConnectX_6)
+        c2 = n1.add_component(name='c2', model_type=fu.ComponentModelType.SharedNIC_ConnectX_6)
+        n1.add_component(name='c3', model_type=fu.ComponentModelType.NVME_P4510)
+        n2 = t.add_node(name='n2', site='UKY', capacities=fu.Capacities(core=10, ram=10, disk=35))
+        c4 = n2.add_component(name='c4', model_type=fu.ComponentModelType.SmartNIC_ConnectX_5)
+        s1 = t.add_network_service(name='s1', nstype=fu.ServiceType.FABNetv4Ext,
+                                   interfaces=[c1.interface_list[0]])
+        s2 = t.add_network_service(name='s2', nstype=fu.ServiceType.FABNetv4Ext,
+                                   interfaces=[c4.interface_list[0]])
+        # this sets site property on fabnet, which is a must
+        t.validate()
+
+        authz = ResourceAuthZAttributes()
+
+        now = datetime.datetime.now(datetime.timezone.utc)
+        delta = datetime.timedelta(days=13, hours=11, minutes=7, seconds=4, milliseconds=10)
+        future = now + delta
+
+        authz.collect_resource_attributes(source=t)
+        authz.set_action('create')
+        authz.set_lifetime(future)
+        authz.set_subject_attributes(subject_id='user@google.com', project='MyProject', project_tag=[
+            'VM.NoLimit',
+            'Component.SmartNIC', 'Component.NVME',
+            'Slice.Multisite'
+        ])
+        authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
+
+        print(f"FABNetv4ExtFail: {authz.transform_to_pdp_request()}")
+        self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP, 'Deny')
+
+    def testFABNetv6ExtOK(self) -> None:
+
+        """
+        Test that adding FABNetv4 with proper tag works
+        """
+        t = fu.ExperimentTopology()
+        n1 = t.add_node(name='n1', site='RENC', capacities=fu.Capacities(core=1, ram=10, disk=25))
+        c1 = n1.add_component(name='c1', model_type=fu.ComponentModelType.SmartNIC_ConnectX_6)
+        c2 = n1.add_component(name='c2', model_type=fu.ComponentModelType.SharedNIC_ConnectX_6)
+        n1.add_component(name='c3', model_type=fu.ComponentModelType.NVME_P4510)
+        n2 = t.add_node(name='n2', site='UKY', capacities=fu.Capacities(core=10, ram=10, disk=35))
+        c4 = n2.add_component(name='c4', model_type=fu.ComponentModelType.SmartNIC_ConnectX_5)
+        s1 = t.add_network_service(name='s1', nstype=fu.ServiceType.FABNetv6Ext,
+                                   interfaces=[c1.interface_list[0]])
+        s2 = t.add_network_service(name='s2', nstype=fu.ServiceType.FABNetv6Ext,
+                                   interfaces=[c4.interface_list[0]])
+        # this sets site property on fabnet, which is a must
+        t.validate()
+
+        authz = ResourceAuthZAttributes()
+
+        now = datetime.datetime.now(datetime.timezone.utc)
+        delta = datetime.timedelta(days=13, hours=11, minutes=7, seconds=4, milliseconds=10)
+        future = now + delta
+
+        authz.collect_resource_attributes(source=t)
+        authz.set_action('create')
+        authz.set_lifetime(future)
+        authz.set_subject_attributes(subject_id='user@google.com', project='MyProject', project_tag=[
+            'VM.NoLimit',
+            'Component.SmartNIC', 'Component.NVME', 'Net.FABNetv6Ext',
+            'Slice.Multisite'
+        ])
+        authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
+
+        print(f"FABNetv6ExtOK: {authz.transform_to_pdp_request()}")
+        self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP)
+
+    def testFABNetv6ExtFail(self) -> None:
+
+        """
+        Test that adding FABNetv4 with proper tag works
+        """
+        t = fu.ExperimentTopology()
+        n1 = t.add_node(name='n1', site='RENC', capacities=fu.Capacities(core=1, ram=10, disk=25))
+        c1 = n1.add_component(name='c1', model_type=fu.ComponentModelType.SmartNIC_ConnectX_6)
+        c2 = n1.add_component(name='c2', model_type=fu.ComponentModelType.SharedNIC_ConnectX_6)
+        n1.add_component(name='c3', model_type=fu.ComponentModelType.NVME_P4510)
+        n2 = t.add_node(name='n2', site='UKY', capacities=fu.Capacities(core=10, ram=10, disk=35))
+        c4 = n2.add_component(name='c4', model_type=fu.ComponentModelType.SmartNIC_ConnectX_5)
+        s1 = t.add_network_service(name='s1', nstype=fu.ServiceType.FABNetv6Ext,
+                                   interfaces=[c1.interface_list[0]])
+        s2 = t.add_network_service(name='s2', nstype=fu.ServiceType.FABNetv6Ext,
+                                   interfaces=[c4.interface_list[0]])
+        # this sets site property on fabnet, which is a must
+        t.validate()
+
+        authz = ResourceAuthZAttributes()
+
+        now = datetime.datetime.now(datetime.timezone.utc)
+        delta = datetime.timedelta(days=13, hours=11, minutes=7, seconds=4, milliseconds=10)
+        future = now + delta
+
+        authz.collect_resource_attributes(source=t)
+        authz.set_action('create')
+        authz.set_lifetime(future)
+        authz.set_subject_attributes(subject_id='user@google.com', project='MyProject', project_tag=[
+            'VM.NoLimit',
+            'Component.SmartNIC', 'Component.NVME',
+            'Slice.Multisite'
+        ])
+        authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
+
+        print(f"FABNetv4ExtFail: {authz.transform_to_pdp_request()}")
+        self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP, 'Deny')
