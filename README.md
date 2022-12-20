@@ -106,7 +106,8 @@ The following is an incomplete list of possible project tag values:
 - Component.Storage - allows to create and attach rotating storage
 - Component.NVME - allows to provision and attach NVME components
 - Net.NoLimitBW - allows to provision links over 10 Gbps
-- Net.Peering - allows to create slices with public peering
+- Net.FABNetv4Ext - allows to create slices with public connectivity over IPv4
+- Net.FABNetv6Ext - allows to create slices with public connectivity over IPv6
 - Net.PortMirroring - allows to create slices that include port mirroring
 - Net.FacilityPort.XXX - allows to create slices with stitch port with short name XXX
 - Net.AllFacilityPorts - allows to create slices with any stitchport
