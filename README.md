@@ -233,7 +233,7 @@ curl --include --header "Content-Type: application/xacml+json" --data @policies/
 
 ## Using a test harness
 
-Make sure that `./authzforce-ce-core-pdp-cli-X.Y.Z.jar ` is present under `authzforce/` directory. Update `test/test-harness.py` appropriately, then run:
+Make sure that `./authzforce-ce-core-pdp-cli-X.Y.Z.jar ` is present under `authzforce/` directory. Update `test/test-harness.py` appropriately, be sure to use a virtenv that has the latest (or appropriate) version of fabric-fim library, then run:
 ```
 $ cd test/
 $ pytest test-harness.py
