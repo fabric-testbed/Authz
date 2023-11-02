@@ -22,7 +22,8 @@ NOPOLICYID = 'urn:fabric:authz:xacml:actor:no:ps'
 NOPDP = 'pdp-no.xml'
 
 # make sure the CLI executable and appropriate Java version are available
-AUTHZFORCECLI = '../authzforce/authzforce-ce-core-pdp-cli-20.1.0.jar'
+#AUTHZFORCECLI = '../authzforce/authzforce-ce-core-pdp-cli-20.1.0.jar'
+AUTHZFORCECLI = '../authzforce/authzforce-ce-core-pdp-cli-20.3.2.jar'
 PERMIT_REQUESTS = [ 
     '../policies/alfa/Requests/orchestrator-request-simplest.json',
     '../policies/alfa/Requests/orchestrator-request-simple.json',
