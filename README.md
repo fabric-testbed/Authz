@@ -22,28 +22,31 @@ The following logical predicates reflect role assignments in FABRIC (with a view
 | facilityOperator(principal, facility) | A facility operator can create and delete any project and manage owners and members of any project. Facility operator can create slices in any project subject to project resource constraints. |
 | projectOwner(principal, project) | A project Owner may add or remove project members for the projects they own. Project Owners are also project members. |
 | projectMember(principal, project) | A project Member may create slices assigned to their corresponding project(s). Slice creation requires a membership in a valid project. A project member can provision resources/add slivers into a valid slice subject to resource federation- or aggregate-level resource constraints. A slice may contain slivers created by different project members. A sliver can only be modified or deleted by the project member who created it or by a project owner with one exception: slivers belonging to different project members are automatically allowed to be stitched together as necessary (i.e. if adding a sliver from Alice to a slice requires modifying another sliver already created by Bob, permission is automatically granted assuming Alice and Bob are members of the same project). |
+| tokenHolder(principal, project) | A token holder may create long-lived API tokens |
 
 Projects are bound to specific facilities at the time of creation, thus effectively adding a `facility` parameter to projectOwner and projectMember predicates.
 
 |  Rule  | Implemented in  |
 |---|---|
-| 1. Project Lead can create projects at a facility  |  ProjectRegistry |
-| 2. Project Lead can delete the project they created at a facility | ProjectRegistry |
-| 3. Facility Operator can remove any project at a facility | ProjectRegistry |
-| 4. Project Lead can add and remove Project Owners from projects they created at a facility | ProjectRegistry |
-| 5. Facility Operator can add and remove Project Owners from any project at a facility | ProjectRegistry |
-| 6. Project Lead includes privileges of a Project Owner | ProjectRegistry |
-| 7. Project Owner can add and remove Project Members from their project at a facility | ProjectRegistry |
-| 8. Facility Operator includes privileges of a Project Owner on a project (can add remove members) | ProjectRegistry |
-| 9. Project Owner includes privileges as Project Member | ProjectRegistry |
+| 1. Project Lead can create projects at a facility  |  CoreAPI |
+| 2. Project Lead can delete the project they created at a facility | CoreAPI |
+| 3. Facility Operator can remove any project at a facility | CoreAPI |
+| 4. Project Lead can add and remove Project Owners from projects they created at a facility | CoreAPI |
+| 5. Facility Operator can add and remove Project Owners from any project at a facility | CoreAPI |
+| 6. Project Lead includes privileges of a Project Owner | CoreAPI |
+| 7. Project Owner can add and remove Project Members from their project at a facility | CoreAPI |
+| 8. Facility Operator includes privileges of a Project Owner on a project (can add remove members) | CoreAPI |
+| 9. Project Owner includes privileges as Project Member | CoreAPI |
 | 10. Project Member can create slices within a project at a facility | XACML PDPs |
 | 11. Project Member can delete a slice they created or any slice in their project | XACML PDPs |
 | 12. Project Member can create slivers within any project slice subject to federation- or aggregate-level resource constraints at a facility | XACML PDPs |
 | 13. Project Owner can modify or delete any sliver belonging to a slice created within their project. Modify operations are subject to federation- and aggregate-level resource constraints. | XACML PDPs |
-| 14. Facility Operator is also a Project Member for any project (can create/delete slices and slivers) subject to project resource constraints. | ProjectRegistry |
+| 14. Facility Operator is also a Project Member for any project (can create/delete slices and slivers) subject to project resource constraints. | CoreAPI |
 | 15. Resource type/project tag based policies | XACML PDPs |
 
-Rules 1-9 of the project management policies above are embedded in the [ProjectRegistry](https://github.com/fabric-testbed/project-registry) procedural code and CI Logon logic. The remaining rules are federation-level and are implemented using XACML PDPs.
+Rules 1-9 of the project management policies above are embedded in the [CoreAPI](https://github.com/fabric-testbed/fabric-core-api) procedural code and CI Logon logic. The remaining rules are federation-level and are implemented using XACML PDPs.
+
+Generation of API tokens for control framework is handled by [Credential Manager](https://github.com/fabric-testbed/CredentialManager).
 
 # Resource provisioning authorizations using ABAC
 
@@ -53,7 +56,7 @@ Much of the resource authorization is done inside Orchestrator, Broker and Aggre
 dimensions/sizes of the slivers and the duration for which slivers are being created. Operations related to modifying existing resources require information about the identity of the user invoking the modify operation as well as the user who originally created the resource that is being modified.
 
 Tags are added to a project by Facility Operators based on requests from the Project Owners. The full discussion of how project attributes are communicated to the PDP is outside the scope of this document, however briefly:
-- One or more attributes or tags are added to a project within a Project registry by Facility Operator
+- One or more attributes or tags are added to a project within a CoreAPI by Facility Operator
 - Prior to requesting to create a slice, experimenter receives a cryptographically signed authorization token that contains relevant project tags
 - The PDP received information about requested resource attributes (their type, size, components, duration) as well as the project tags extracted from a validated token.
 - In addition the control framework agent invoking the PDP provides identity attributes (e.g. email) of the principal invoking the action and the principal who e.g. created the resource
@@ -114,6 +117,7 @@ The following is an incomplete list of possible project tag values:
 - Slice.Multisite - allows to create slices spanning multiple sites
 - Slice.Measurements - allows to provision measurement VMs
 - Slice.NoLimitLifetime - allows to create slices with a lifetime beyond default limit X time units without the need to renew
+- Project.Educational - tags the project as educational restricting it to a subset of resources
 
 
 ### Actions, Scopes and Action Attributes
