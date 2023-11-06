@@ -188,10 +188,10 @@ namespace fabricTags {
 
                     rule eduSite {
                         deny
-                        condition not(Attributes.resourceSite == "EDUKY") && Attributes.projectTag == "Project.Educational" && not(Attributes.projectTag == "Slice.Multisite")
+                        condition not(Attributes.resourceSite == "EDUKY") && Attributes.projectTag == "Slice.OnlyEDUKY" && not(Attributes.projectTag == "Slice.Multisite")
                         on deny {
                             advice reasonToDeny {
-                                Attributes.message = "Policy Violation: Your project is tagged as Educational and lacks Slice.Multisite tag and cannot use resources on sites other than EDUKY."
+                                Attributes.message = "Policy Violation: Your project is tagged as OnlyEDUKY and lacks Slice.Multisite tag and cannot use resources on sites other than EDUKY."
                             }
                         }
                     } 

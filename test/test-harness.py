@@ -717,7 +717,7 @@ class PolicyTest(unittest.TestCase):
         authz.set_subject_attributes(subject_id='user@google.com', project='MyProject', project_tag=[
             'VM.NoLimit',
             'Component.SmartNIC', 'Net.FABNetv6Ext',
-            'Project.Educational'
+            'Slice.OnlyEDUKY'
         ])
         authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
 
@@ -754,7 +754,7 @@ class PolicyTest(unittest.TestCase):
         authz.set_subject_attributes(subject_id='user@google.com', project='MyProject', project_tag=[
             'VM.NoLimit',
             'Component.SmartNIC', 'Net.FABNetv6Ext',
-            'Project.Educational'
+            'Slice.OnlyEDUKY'
         ])
         authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
 
@@ -791,7 +791,7 @@ class PolicyTest(unittest.TestCase):
         authz.set_subject_attributes(subject_id='user@google.com', project='MyProject', project_tag=[
             'VM.NoLimit',
             'Component.SmartNIC', 'Net.FABNetv6Ext',
-            'Project.Educational', 'Slice.Multisite'
+            'Slice.OnlyEDUKY', 'Slice.Multisite'
         ])
         authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
 
