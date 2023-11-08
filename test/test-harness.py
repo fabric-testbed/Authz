@@ -690,7 +690,7 @@ class PolicyTest(unittest.TestCase):
     def testEducationalOK(self) -> None:
 
         """
-        Test that adding using EDUKY with Project.Educational is OK
+        Test that adding using EDUKY with Slice.OnlyEDUKY is OK
         """
         t = fu.ExperimentTopology()
         n1 = t.add_node(name='n1', site='EDUKY', capacities=fu.Capacities(core=1, ram=10, disk=25))
@@ -717,7 +717,7 @@ class PolicyTest(unittest.TestCase):
         authz.set_subject_attributes(subject_id='user@google.com', project='MyProject', project_tag=[
             'VM.NoLimit',
             'Component.SmartNIC', 'Net.FABNetv6Ext',
-            'Project.Educational'
+            'Slice.OnlyEDUKY'
         ])
         authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
 
@@ -727,13 +727,13 @@ class PolicyTest(unittest.TestCase):
     def testEducationalFail(self) -> None:
 
         """
-        Test that adding using non-UKY with Project.Educational fails
+        Test that adding using non-EDUUKY with Slice.EDUKY fails
         """
         t = fu.ExperimentTopology()
-        n1 = t.add_node(name='n1', site='RENC', capacities=fu.Capacities(core=1, ram=10, disk=25))
+        n1 = t.add_node(name='n1', site='WASH', capacities=fu.Capacities(core=1, ram=10, disk=25))
         c1 = n1.add_component(name='c1', model_type=fu.ComponentModelType.SmartNIC_ConnectX_6)
         c2 = n1.add_component(name='c2', model_type=fu.ComponentModelType.SharedNIC_ConnectX_6)
-        n2 = t.add_node(name='n2', site='RENC', capacities=fu.Capacities(core=10, ram=10, disk=35))
+        n2 = t.add_node(name='n2', site='EDUKY', capacities=fu.Capacities(core=10, ram=10, disk=35))
         c4 = n2.add_component(name='c4', model_type=fu.ComponentModelType.SmartNIC_ConnectX_5)
         s1 = t.add_network_service(name='s1', nstype=fu.ServiceType.FABNetv6Ext,
                                    interfaces=[c1.interface_list[0]])
@@ -754,46 +754,9 @@ class PolicyTest(unittest.TestCase):
         authz.set_subject_attributes(subject_id='user@google.com', project='MyProject', project_tag=[
             'VM.NoLimit',
             'Component.SmartNIC', 'Net.FABNetv6Ext',
-            'Project.Educational'
+            'Slice.OnlyEDUKY'
         ])
         authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
 
         print(f"EducationalFail: {authz.transform_to_pdp_request()}")
         self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP, 'Deny')
-
-    def testEducationalMultisiteOK(self) -> None:
-
-        """
-        Test that adding using non-UKY with Project.Educational and Slice.Multisite is OK
-        """
-        t = fu.ExperimentTopology()
-        n1 = t.add_node(name='n1', site='RENC', capacities=fu.Capacities(core=1, ram=10, disk=25))
-        c1 = n1.add_component(name='c1', model_type=fu.ComponentModelType.SmartNIC_ConnectX_6)
-        c2 = n1.add_component(name='c2', model_type=fu.ComponentModelType.SharedNIC_ConnectX_6)
-        n2 = t.add_node(name='n2', site='UKY', capacities=fu.Capacities(core=10, ram=10, disk=35))
-        c4 = n2.add_component(name='c4', model_type=fu.ComponentModelType.SmartNIC_ConnectX_5)
-        s1 = t.add_network_service(name='s1', nstype=fu.ServiceType.FABNetv6Ext,
-                                   interfaces=[c1.interface_list[0]])
-        s2 = t.add_network_service(name='s2', nstype=fu.ServiceType.FABNetv6Ext,
-                                   interfaces=[c4.interface_list[0]])
-
-        t.validate()
-
-        authz = ResourceAuthZAttributes()
-
-        now = datetime.datetime.now(datetime.timezone.utc)
-        delta = datetime.timedelta(days=13, hours=11, minutes=7, seconds=4, milliseconds=10)
-        future = now + delta
-
-        authz.collect_resource_attributes(source=t)
-        authz.set_action('create')
-        authz.set_lifetime(future)
-        authz.set_subject_attributes(subject_id='user@google.com', project='MyProject', project_tag=[
-            'VM.NoLimit',
-            'Component.SmartNIC', 'Net.FABNetv6Ext',
-            'Project.Educational', 'Slice.Multisite'
-        ])
-        authz.set_resource_subject_and_project(subject_id='user@google.com', project='MyProject')
-
-        print(f"EducationalMultisiteOK: {authz.transform_to_pdp_request()}")
-        self.runOnStringRequest(authz.transform_to_pdp_request(), TAGPDP)
