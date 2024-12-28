@@ -19,27 +19,6 @@ namespace fabricTags {
             apply permitUnlessDeny
 
             // Each of the following policies must explicitly say 'permit' or else the policy fails
-            policyset createSwitch = "urn:fabric:authz:xacml:orchestrator:tags:create:switch" {
-                target clause Attributes.resourceType == "sliver"
-                apply denyUnlessPermit
-            
-                policy createSwitchPolicy = "urn:fabric:authz:xacml:orchestrator:tags:create:switch:requireP4" {
-                    target clause Attributes.resourceType == "sliver"
-                    apply permitUnlessDeny
-            
-                    rule requireSwitchP4Tag {
-                        deny
-                        condition not(Attributes.projectTag == "Switch.P4")
-                        on deny {
-                            advice reasonToDeny {
-                                Attributes.message = "Policy Violation: Your project is lacking Switch.P4 tag to provision a P4 switch."
-                            }
-                        }
-                    }
-                }
-            }            
-
-            // Each of the following policies must explicitly say 'permit' or else the policy fails
             policyset createVM = "urn:fabric:authz:xacml:orchestrator:tags:create:vm" {
                 target clause Attributes.resourceType == "sliver"
                 apply denyUnlessPermit
@@ -157,6 +136,27 @@ namespace fabricTags {
                 }
             }
 
+            // Each of the following policies must explicitly say 'permit' or else the policy fails
+            policyset createSwitch = "urn:fabric:authz:xacml:orchestrator:tags:create:switch" {
+                target clause Attributes.resourceType == "switch-p4"
+                apply denyUnlessPermit
+            
+                policy createSwitchPolicy = "urn:fabric:authz:xacml:orchestrator:tags:create:switch:requireP4" {
+                    target clause Attributes.resourceType == "switch-p4"
+                    apply permitUnlessDeny
+            
+                    rule requireSwitchP4Tag {
+                        deny
+                        condition not(Attributes.projectTag == "Switch.P4")
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Policy Violation: Your project is lacking Switch.P4 tag to provision a P4 switch."
+                            }
+                        }
+                    }
+                }
+            }   
+
             // this is for network 
             policyset net = "urn:fabric:authz:xacml:orchestrator:tags:create:net" {
                 target clause Attributes.resourceType == "sliver"
@@ -189,7 +189,7 @@ namespace fabricTags {
 
                     rule withMirroring {
                         deny
-                        condition stringBagSize(Attributes.resourceMirrorSite) > 0 && not(Attributes.projectTag == "Net.PortMirroring")
+                        condition stringBagSize(Attributes.resourceMirrorSite) > 0 && not(Attributes.projectTag == "Net.InfrastructurePortMirroring")
                         on deny {
                             advice reasonToDeny {
                                 Attributes.message = "Policy Violation: Your project is lacking Net.PortMirroring tag to request a slice that uses port mirroring."
