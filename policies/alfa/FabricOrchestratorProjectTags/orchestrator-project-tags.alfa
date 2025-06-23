@@ -84,52 +84,127 @@ namespace fabricTags {
                     // precise deny, permit otherwise
                     apply permitUnlessDeny
 
-                    rule withGPU {
+
+                        // GPUs
+                    rule withGPU_A40 {
                         deny
-                        condition Attributes.resourceComponent == "GPU" && not(Attributes.projectTag == "Component.GPU")
+                        condition Attributes.resourceComponent == "GPU_A40" &&
+                                not("Component.GPU_A40" == Attributes.projectTag || "Component.GPU" == Attributes.projectTag)
                         on deny {
                             advice reasonToDeny {
-                                Attributes.message = "Policy Violation: Your project is lacking Component.GPU tag to provision a VM with GPU."
+                                Attributes.message = "Policy Violation: Your project is lacking Component.GPU_A40 or Component.GPU tag to provision a VM with GPU_A40."
                             }
                         }
                     }
 
-                    rule withSmartNIC {
+                    rule withGPU_A30 {
                         deny
-                        condition Attributes.resourceComponent == "SmartNIC" && not(Attributes.projectTag == "Component.SmartNIC")
+                        condition Attributes.resourceComponent == "GPU_A30" &&
+                                not("Component.GPU_A30" == Attributes.projectTag || "Component.GPU" == Attributes.projectTag)
                         on deny {
                             advice reasonToDeny {
-                                Attributes.message = "Policy Violation: Your project is lacking Component.SmartNIC tag to provision a VM with SmartNIC."
+                                Attributes.message = "Policy Violation: Your project is lacking Component.GPU_A30 or Component.GPU tag to provision a VM with GPU_A30."
                             }
                         }
                     }
 
-                    rule withStorage {
+                    rule withGPU_Tesla_T4 {
                         deny
-                        condition Attributes.resourceComponent == "Storage" && not(Attributes.projectTag == "Component.Storage")
+                        condition Attributes.resourceComponent == "GPU_Tesla_T4" &&
+                                not("Component.GPU_Tesla_T4" == Attributes.projectTag || "Component.GPU" == Attributes.projectTag)
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Policy Violation: Your project is lacking Component.GPU_Tesla_T4 or Component.GPU tag to provision a VM with Tesla T4 GPU."
+                            }
+                        }
+                    }
+
+                    rule withGPU_RTX6000 {
+                        deny
+                        condition Attributes.resourceComponent == "GPU_RTX6000" &&
+                                not("Component.GPU_RTX6000" == Attributes.projectTag || "Component.GPU" == Attributes.projectTag)
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Policy Violation: Your project is lacking Component.GPU_RTX6000 or Component.GPU tag to provision a VM with RTX6000 GPU."
+                            }
+                        }
+                    }
+
+                    // FPGAs
+                    rule withFPGA_Xilinx_U280 {
+                        deny
+                        condition Attributes.resourceComponent == "FPGA_Xilinx_U280" &&
+                                not("Component.FPGA_Xilinx_U280" == Attributes.projectTag || "Component.FPGA" == Attributes.projectTag)
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Policy Violation: Your project is lacking Component.FPGA_Xilinx_U280 or Component.FPGA tag to provision a VM with Xilinx U280 FPGA."
+                            }
+                        }
+                    }
+
+                    rule withFPGA_Xilinx_SN1022 {
+                        deny
+                        condition Attributes.resourceComponent == "FPGA_Xilinx_SN1022" &&
+                                not("Component.FPGA_Xilinx_SN1022" == Attributes.projectTag || "Component.FPGA" == Attributes.projectTag)
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Policy Violation: Your project is lacking Component.FPGA_Xilinx_SN1022 or Component.FPGA tag to provision a VM with Xilinx SN1022 FPGA."
+                            }
+                        }
+                    }
+
+                    // SmartNICs
+                    rule withSmartNIC_ConnectX_6 {
+                        deny
+                        condition Attributes.resourceComponent == "SmartNIC_ConnectX_6" &&
+                                not("Component.SmartNIC_ConnectX_6" == Attributes.projectTag || "Component.SmartNIC" == Attributes.projectTag)
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Policy Violation: Your project is lacking Component.SmartNIC_ConnectX_6 or Component.SmartNIC tag to provision a VM with ConnectX-6 SmartNIC."
+                            }
+                        }
+                    }
+
+                    rule withSmartNIC_BlueField_3_ConnectX_6 {
+                        deny
+                        condition Attributes.resourceComponent == "SmartNIC_BlueField_3_ConnectX_6" &&
+                                not("Component.SmartNIC_BlueField_3_ConnectX_6" == Attributes.projectTag || "Component.SmartNIC" == Attributes.projectTag)
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Policy Violation: Your project is lacking Component.SmartNIC_BlueField_3_ConnectX_6 or Component.SmartNIC tag to provision a VM with BlueField-3 SmartNIC."
+                            }
+                        }
+                    }
+
+                    rule withSmartNIC_ConnectX_5 {
+                        deny
+                        condition Attributes.resourceComponent == "SmartNIC_ConnectX_5" &&
+                                not("Component.SmartNIC_ConnectX_5" == Attributes.projectTag || "Component.SmartNIC" == Attributes.projectTag)
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Policy Violation: Your project is lacking Component.SmartNIC_ConnectX_5 or Component.SmartNIC tag to provision a VM with ConnectX-5 SmartNIC."
+                            }
+                        }
+                    }
+
+                    // NVME
+                    rule withNVME_P4510 {
+                        deny
+                        condition Attributes.resourceComponent == "NVME_P4510" &&
+                                not("Component.NVME_P4510" == Attributes.projectTag || "Component.NVME" == Attributes.projectTag)
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Policy Violation: Your project is lacking Component.NVME_P4510 or Component.NVME tag to provision a VM with NVME P4510."
+                            }
+                        }
+                    }
+
+                    rule withStorage_NAS {
+                        deny
+                        condition Attributes.resourceComponent == "Storage_NAS" && not(Attributes.projectTag == "Component.Storage")
                         on deny {
                             advice reasonToDeny {
                                 Attributes.message = "Policy Violation: Your project is lacking Component.Storage tag to provision a VM with attached storage."
-                            }
-                        }
-                    }
-
-                    rule withFPGA {
-                        deny
-                        condition Attributes.resourceComponent == "FPGA" && not(Attributes.projectTag == "Component.FPGA")
-                        on deny {
-                            advice reasonToDeny {
-                                Attributes.message = "Policy Violation: Your project is lacking Component.FPGA tag to provision a VM with FPGA."
-                            }
-                        }
-                    }
-
-                    rule withNVME {
-                        deny
-                        condition Attributes.resourceComponent == "NVME" && not(Attributes.projectTag == "Component.NVME")
-                        on deny {
-                            advice reasonToDeny {
-                                Attributes.message = "Policy Violation: Your project is lacking Component.NVME tag to provision a VM with NVME."
                             }
                         }
                     }
