@@ -165,13 +165,24 @@ namespace fabricTags {
                         }
                     }
 
-                    rule withSmartNIC_BlueField_3_ConnectX_6 {
+                    rule withSmartNIC_ConnectX_7_400 {
                         deny
-                        condition Attributes.resourceComponent == "SmartNIC_BlueField_3_ConnectX_6" &&
-                                not("Component.SmartNIC_BlueField_3_ConnectX_6" == Attributes.projectTag || "Component.SmartNIC" == Attributes.projectTag)
+                        condition Attributes.resourceComponent == "SmartNIC_ConnectX_7_400" &&
+                                not("Component.SmartNIC_ConnectX_7_400" == Attributes.projectTag || "Component.SmartNIC" == Attributes.projectTag)
                         on deny {
                             advice reasonToDeny {
-                                Attributes.message = "Policy Violation: Your project is lacking Component.SmartNIC_BlueField_3_ConnectX_6 or Component.SmartNIC tag to provision a VM with BlueField-3 SmartNIC."
+                                Attributes.message = "Policy Violation: Your project is lacking Component.SmartNIC_ConnectX_7_400 or Component.SmartNIC tag to provision a VM with BlueField-3 400G SmartNIC."
+                            }
+                        }
+                    }
+
+                    rule withSmartNIC_ConnectX_7_100 {
+                        deny
+                        condition Attributes.resourceComponent == "SmartNIC_ConnectX_7_100" &&
+                                not("Component.SmartNIC_ConnectX_7_100" == Attributes.projectTag || "Component.SmartNIC" == Attributes.projectTag)
+                        on deny {
+                            advice reasonToDeny {
+                                Attributes.message = "Policy Violation: Your project is lacking Component.SmartNIC_ConnectX_7_100 or Component.SmartNIC tag to provision a VM with BlueField-3 100G SmartNIC."
                             }
                         }
                     }
